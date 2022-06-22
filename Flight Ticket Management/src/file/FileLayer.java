@@ -84,9 +84,13 @@ public class FileLayer
 			while((i=in.read())!=-1)
 			{
 				str=str+(char)i;
-				
+				if(i==10)
+				{
+					newList.add(str);
+					str="";
+				}
 			}
-			newList.add(str);
+			
 			return newList;
 		}
 		catch(IOException e)

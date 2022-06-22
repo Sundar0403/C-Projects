@@ -11,6 +11,7 @@ import java.util.Scanner;
 import booking.BookingDetails;
 import logic.FlightTicketLogic;
 import passenger.PassengerDetails;
+import seat.SeatDetails;
 
 public class FlightTicketManagement 
 {
@@ -57,10 +58,14 @@ public class FlightTicketManagement
 	public void setBookingDetails() throws Exception
 	{
 		BookingDetails bookingObj=new BookingDetails();
+		int bookingId=logicObj.getBookingId();
+		bookingObj.setBookingId(bookingId);
 		System.out.println("Enter the Source Location :");
 		String source=scan.nextLine();
+		bookingObj.setSource(source);
 		System.out.println("Enter the Destintaion Location :");
 		String destination=scan.nextLine();
+		bookingObj.setDestination(destination);
 		
 		String flightName="";
 		
@@ -70,11 +75,75 @@ public class FlightTicketManagement
 			if(flight.get(i).contains(destination) && flight.get(i).contains(source))
 			{
 				flightName=flight.get(i);
+				System.out.println(flightName);
 			}
 		}
+		
+		bookingObj.setFlightName(flightName);
 		int arr[]=readIndividualFile();
 		
 		logicObj.setSeatDetails(flightName,arr);
+		int size=passengerList.size();
+		List<String> seatList=new ArrayList<>();
+		int aisleWindowCount=0;
+		String classType="";
+		for(int i=0;i<size;i++)
+		{
+			boolean flag=true;
+			while(flag)
+			{
+				System.out.println("Enter the Seat You Want to Book :");
+				String seatNo=scan.nextLine();
+				SeatDetails seatObj=logicObj.getSeatDetails(flightName,seatNo);
+				System.out.println("The Seat You Want to Book is :"+seatObj.getSeatType());
+				System.out.println("Please Confirm to Book :");
+				System.out.println("1.YES\n 2.NO");
+				String con=scan.nextLine();
+				if(con.equals("YES"))
+				{
+					seatList.add(seatNo);
+					if(seatObj.getSeatType().equals("Window") || seatObj.getSeatType().equals("Aisle"))
+					{
+						aisleWindowCount++;
+					}
+					logicObj.removeSeatDetails(flightName, seatNo);
+					logicObj.setFilled(seatNo,seatObj);
+					flag=false;
+				}
+				else
+				{
+					flag=true;
+				}
+				classType=seatObj.getClassType();
+				
+			}
+		}
+		bookingObj.setSeatNo(seatList);
+		System.out.println("Enter the Meal Preference :");
+		System.out.println("Say\n 1.YES \n 2.NO");
+		String meal=scan.nextLine();
+		int mealCount=0;
+		if(meal.equals("YES"))
+		{
+			bookingObj.setMealPreference(true);
+			mealCount=passengerList.size();
+		}
+		else
+		{
+			bookingObj.setMealPreference(false);
+		}
+		
+		double amount=logicObj.getPayableAmount(size,aisleWindowCount,mealCount,classType);
+		System.out.println("The Payable Amount for the Tickets + Meals is :"+amount);
+		System.out.println("Enter the Amount to Pay :");
+		double payable=scan.nextDouble();
+		scan.nextLine();
+		bookingObj.setAmount(amount);
+		bookingObj.setPassengerList(passengerList);
+		
+		logicObj.setBookingDetails(bookingId,bookingObj);
+		System.out.println("Ticked Booked SuccessFully :");
+		logicObj.printTicket(bookingObj);
 	}
 	
 	public void createIndividualFile() throws IOException
@@ -160,6 +229,7 @@ public class FlightTicketManagement
 		{
 			//flightObj.createIndividualFile();
 			//flightObj.readFlightFile();
+			flightObj.setBookingDetails();
 		} 
 		catch (Exception e) 
 		{

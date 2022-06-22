@@ -9,10 +9,11 @@ public class BookingDetails
 	int bookingId;
 	String source;
 	String destination;
-	String allotedSeat;
-	String mealPreference;
+	List<String> seatNo;
+	boolean mealPreference;
 	double amount;
-	String flightNo;
+	String flightName;
+	
 	List<PassengerDetails> passengerList;
 	
 	public int getBookingId() {
@@ -33,16 +34,16 @@ public class BookingDetails
 	public void setDestination(String destination) {
 		this.destination = destination;
 	}
-	public String getAllotedSeat() {
-		return allotedSeat;
+	public List<String> getSeatNo() {
+		return seatNo;
 	}
-	public void setAllotedSeat(String allotedSeat) {
-		this.allotedSeat = allotedSeat;
+	public void setSeatNo(List<String> seatNo) {
+		this.seatNo = seatNo;
 	}
-	public String getMealPreference() {
+	public boolean getMealPreference() {
 		return mealPreference;
 	}
-	public void setMealPreference(String mealPreference) {
+	public void setMealPreference(boolean mealPreference) {
 		this.mealPreference = mealPreference;
 	}
 	public double getAmount() {
@@ -51,11 +52,11 @@ public class BookingDetails
 	public void setAmount(double amount) {
 		this.amount = amount;
 	}
-	public String getFlightNo() {
-		return flightNo;
+	public String getFlightName() {
+		return flightName;
 	}
-	public void setFlightNo(String flightNo) {
-		this.flightNo = flightNo;
+	public void setFlightName(String flightName) {
+		this.flightName = flightName;
 	}
 	public List<PassengerDetails> getPassengerList() {
 		return passengerList;
@@ -66,8 +67,8 @@ public class BookingDetails
 	@Override
 	public String toString() {
 		return "BookingDetails [bookingId=" + bookingId + ", source=" + source + ", destination=" + destination
-				+ ", allotedSeat=" + allotedSeat + ", mealPreference=" + mealPreference + ", amount=" + amount
-				+ ", flightNo=" + flightNo + ", passengerList=" + passengerList + "]";
+				+ ", seatNo=" + seatNo + ", mealPreference=" + mealPreference
+				+ ", amount=" + amount + ", flightName=" + flightName + ", passengerList=" + passengerList + "]";
 	}
 	
 	

@@ -14,6 +14,12 @@ public class SeatDetails
 	public void setSeatNo(String seatNo) {
 		this.seatNo = seatNo;
 	}
+	public String getFlightName() {
+		return flightName;
+	}
+	public void setFlightName(String flightName) {
+		this.flightName = flightName;
+	}
 	public String getClassType() {
 		return classType;
 	}
@@ -34,8 +40,8 @@ public class SeatDetails
 	}
 	@Override
 	public String toString() {
-		return "SeatDetails [seatNo=" + seatNo + ", classType=" + classType + ", seatType=" + seatType
-				+ ", aisleOrWindow=" + aisleOrWindow + "]";
+		return "SeatDetails [seatNo=" + seatNo + ", flightName=" + flightName + ", classType=" + classType
+				+ ", seatType=" + seatType + ", aisleOrWindow=" + aisleOrWindow + "]";
 	}
 	
 	
