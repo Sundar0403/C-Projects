@@ -1,12 +1,14 @@
 package management;
 
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 import booking.BookingDetails;
 import logic.FlightTicketLogic;
@@ -68,20 +70,23 @@ public class FlightTicketManagement
 		bookingObj.setDestination(destination);
 		
 		String flightName="";
-		
+		String temp=source+"-"+destination;
 		List<String> flight=readFlightFile();
 		for(int i=0;i<flight.size();i++)
 		{
-			if(flight.get(i).contains(destination) && flight.get(i).contains(source))
+			if(flight.get(i).contains(temp))
 			{
 				flightName=flight.get(i);
-				System.out.println(flightName);
+				System.out.println();
+				System.out.println("The Available Flight is :");
+				System.out.println("------"+flightName+"-----");
+				System.out.println();
 			}
 		}
 		
 		bookingObj.setFlightName(flightName);
-		int arr[]=readIndividualFile();
-		
+		int arr[]=readIndividualFile(flightName);
+		Set<String> classes=new HashSet<>();
 		logicObj.setSeatDetails(flightName,arr);
 		int size=passengerList.size();
 		List<String> seatList=new ArrayList<>();
@@ -92,10 +97,16 @@ public class FlightTicketManagement
 			boolean flag=true;
 			while(flag)
 			{
-				System.out.println("Enter the Seat You Want to Book :");
+				System.out.println("Enter the Seat You Want to Book : (eg.1A,12G etc...)");
 				String seatNo=scan.nextLine();
 				SeatDetails seatObj=logicObj.getSeatDetails(flightName,seatNo);
 				System.out.println("The Seat You Want to Book is :"+seatObj.getSeatType());
+				
+				classes.add(seatObj.getClassType());
+				if(classes.size()>1)
+				{
+					throw new Exception(" You Can't Book Tickets in Different Class :");
+				}
 				System.out.println("Please Confirm to Book :");
 				System.out.println("1.YES\n 2.NO");
 				String con=scan.nextLine();
@@ -138,15 +149,88 @@ public class FlightTicketManagement
 		System.out.println("Enter the Amount to Pay :");
 		double payable=scan.nextDouble();
 		scan.nextLine();
-		bookingObj.setAmount(amount);
+		bookingObj.setAmount(payable);
 		bookingObj.setPassengerList(passengerList);
 		
 		logicObj.setBookingDetails(bookingId,bookingObj);
 		System.out.println("Ticked Booked SuccessFully :");
 		logicObj.printTicket(bookingObj);
+		passengerList=new ArrayList<>();
 	}
 	
-	public void createIndividualFile() throws IOException
+	public void particularTicketCancellation() throws Exception
+	{
+		System.out.println("-*-*-*TICKET CANCELLATION PORTAL-*-*-*");
+		System.out.println();
+		System.out.println("Enter the Booking Id :");
+		int bookingId=scan.nextInt();
+		scan.nextLine();
+		BookingDetails bookingObj=logicObj.getBookingDetails(bookingId);
+		List<String> seatList=bookingObj.getSeatNo();
+		if(seatList.size()==1)
+		{
+			System.out.println(" Use All Ticket Cancellation Portal :");
+		}
+		else
+		{	
+			System.out.println("Enter the Number of Tickets to Cancel :");
+			int num=scan.nextInt();
+			scan.nextLine();
+			String classType="";
+			int aisleWindowCount=0;
+			for(int i=0;i<num;i++)
+			{
+				System.out.println("Enter the Ticket Number :");
+				String seatNo=scan.nextLine();
+				SeatDetails seatObj=logicObj.getFilled(seatNo);
+				classType=seatObj.getClassType();
+				logicObj.removeFilledSeats(seatNo);
+				logicObj.updateSeatDetails(bookingObj.getFlightName(),seatNo,seatObj);
+				seatList.remove(seatNo);
+				if(seatObj.getSeatType().equals("Aisle") || seatObj.getSeatType().equals("Window"))
+				{
+					aisleWindowCount++;
+				}
+			}
+		
+			double refund=logicObj.getRefundAmount(bookingObj,classType,num,aisleWindowCount);
+			System.out.println("Ticket Cancellation Done : ");
+			System.out.println("Refunded Amount : "+refund);
+		
+			double newAmount=bookingObj.getAmount()-refund;
+			bookingObj.setAmount(newAmount);
+		}
+	}
+	
+	public void allTicketCancellation() throws Exception
+	{
+		System.out.println("-*-*-*TICKET CANCELLATION PORTAL-*-*-*");
+		System.out.println();
+		System.out.println("Enter the Booking Id :");
+		int bookingId=scan.nextInt();
+		scan.nextLine();
+		
+		BookingDetails bookingObj=logicObj.getBookingDetails(bookingId);
+		
+		List<String> seatList=bookingObj.getSeatNo();
+
+		for(int i=0;i<seatList.size();i++)
+		{
+			String seatNo=seatList.get(i);
+			SeatDetails seatObj=logicObj.getFilled(seatNo);
+			logicObj.removeFilledSeats(seatNo);
+			logicObj.updateSeatDetails(bookingObj.getFlightName(), seatNo, seatObj);
+		}
+		
+		double refund=logicObj.getAllRefund(bookingObj,seatList.size());
+		
+		System.out.println("All Ticket Cancellation Done : ");
+		System.out.println("Refunded Amount : "+refund);
+		
+		logicObj.removeBookingDetails(bookingId,bookingObj.getFlightName());
+	}
+	
+	public void createIndividualFile() throws Exception
 	{
 		System.out.println("Enter the Number of Flights :");
 		int num=scan.nextInt();
@@ -176,12 +260,52 @@ public class FlightTicketManagement
 		}
 	}
 	
-	public int[] readIndividualFile() throws Exception
+	public void printMealOrdered() throws Exception
 	{
-		System.out.println("Enter the FileName :");
-		String fileName=scan.nextLine();
+		System.out.println("-*-*-*THE SEATS MEAL ORDERD ARE -*-*-*");
+		System.out.println();
+		System.out.println();
+		List<String> seatNo=logicObj.getMealSeats();
+		for(int i=0;i<seatNo.size();i++)
+		{
+			System.out.println("**"+seatNo.get(i)+"**");
+		}
+	}
+	
+	private void printSeats() throws Exception 
+	{
+		System.out.println("Enter the Flight Name :");
+		String flight=scan.nextLine();
+		flight+="\n";
+		System.out.println("-*-*-* THE AVAILABLE SEATS ARE -*-*-*");
+		System.out.println();
+		System.out.println();
+		
+		List<String> businessSeatNo=logicObj.getBusinessClass(flight);
+		for(int i=0;i<businessSeatNo.size();i++)
+		{
+			System.out.println(businessSeatNo.get(i));
+		}
+	}
+	
+	public int[] readIndividualFile(String flightName) throws Exception
+	{
+		flightName.trim();
+		String fileName="";
+		for(int i=0;i<flightName.length();i++)
+		{
+			if((int)flightName.charAt(i)==10)
+			{
+				fileName=fileName+".txt";
+			}
+			else
+			{
+				fileName=fileName+flightName.charAt(i);
+			}
+		}
 		String result=logicObj.readIndividualFile(fileName);
-		System.out.println(result);
+		System.out.println(fileName);
+
 		result=result.replace("Business class","");
 		result=result.replace("Economy Class", "");
 		result=result.replace(" : ","");
@@ -191,20 +315,11 @@ public class FlightTicketManagement
 		result=result.replace("\n",",");
 		
 		String arr[]=result.split(",");
-		for(int i=0;i<arr.length;i++)
-		{
-			System.out.println(arr[i]+" ");
-		}
 		int seat[]=new int[arr.length];
 		
 		for(int i=0;i<seat.length;i++)
 		{
 			seat[i]=Integer.parseInt(arr[i]);
-		}
-		
-		for(int i=0;i<seat.length;i++)
-		{
-			System.out.print(seat[i]+" ");
 		}
 		return seat;
 	}
@@ -213,27 +328,173 @@ public class FlightTicketManagement
 	{
 		List<String> flightList=new ArrayList<>();
 		flightList=logicObj.readFlightFile();
-		for(int i=0;i<flightList.size();i++)
-		{
-			System.out.println(flightList.get(i)+" ");
-		}
 		return flightList;
+	}
+	
+	private void printBookingDetails() 
+	{
+		System.out.println("Enter the Booking Id :");
+		int bookingId=scan.nextInt();
+		logicObj.printBookingDetails(bookingId);
 	}
 	
 	
 	public static void main(String args[])
 	{
 		FlightTicketManagement flightObj=new FlightTicketManagement();
-		
-		try 
+		try(Scanner scan=new Scanner(System.in);)
 		{
-			//flightObj.createIndividualFile();
-			//flightObj.readFlightFile();
-			flightObj.setBookingDetails();
-		} 
-		catch (Exception e) 
-		{
-			e.printStackTrace();
+			int choice=0;
+			boolean flag=true;
+			
+			while(flag)
+			{
+				System.out.println("-*-*-* FLIGHT TICKET RESERVATION *-*-*-");
+				System.out.println();
+				System.out.println();
+				System.out.println("-------1.FLIGHT DETAILS UPDATE :-------");
+				System.out.println("-------2.PASSENEGER DETAILS :-------");
+				System.out.println("-------3.BOOK THE TICKETS :-------");
+				System.out.println("-------4.PARTICULAR TICKET CANCELLATION :-------");
+				System.out.println("-------5.ALL TICKET CANCELLATION :-------");
+				System.out.println("-------6.PRINT MEAL ORDERED SEATS :-------");
+				System.out.println("-------7.AVAILABLE SEATS IN A FLIGHT--------");
+				System.out.println("-------8.PRINT BOOKING DETAILS-----------");
+				System.out.println("-------9.EXIT :-------");
+				System.out.println("Enter Your Choice :");
+				choice=scan.nextInt();
+				scan.nextLine();
+				switch(choice)
+				{
+				
+					case 1:
+						try
+						{
+							flightObj.createIndividualFile();
+						}
+						catch(Exception e)
+						{
+							System.out.println("Exception Occured : "+e.getMessage());
+							e.printStackTrace();
+						}
+						break;
+				
+					case 2:
+					
+						try
+						{
+							flightObj.setPassengerDetails();
+							
+						}
+						catch(Exception e)
+						{
+							System.out.println("Exception Occured : "+e.getMessage());
+							e.printStackTrace();
+						}
+						break;
+					
+					case 3:
+					
+						try
+						{
+							flightObj.setBookingDetails();
+						}
+						catch(Exception e)
+						{
+							System.out.println("Exception Occured : "+e.getMessage());
+							e.printStackTrace();
+						}
+						break;
+					case 4:
+					
+						try
+						{
+							flightObj.particularTicketCancellation();
+						}
+					
+						catch(Exception e)
+						{
+							System.out.println("Exception Occured : "+e.getMessage());
+							e.printStackTrace();
+						}
+						break;
+					case 5:
+						
+						try
+						{
+							flightObj.allTicketCancellation();
+							
+						}
+						catch(Exception e)
+						{
+							System.out.println("Exception Occured : "+e.getMessage());
+							e.printStackTrace();
+						}
+						break;
+					
+					case 6:
+					
+						try
+						{	
+							flightObj.printMealOrdered();
+						}
+					
+						catch(Exception e)
+						{
+							System.out.println("Exception Occured : "+e.getMessage());
+							e.printStackTrace();
+						}
+						break;
+						
+					case 7:
+						
+						try
+						{	
+							flightObj.printSeats();
+						}
+					
+						catch(Exception e)
+						{
+							System.out.println("Exception Occured : "+e.getMessage());
+							e.printStackTrace();
+						}
+						break;
+						
+					case 8:
+						
+						try
+						{	
+							flightObj.printBookingDetails();
+						}
+					
+						catch(Exception e)
+						{
+							System.out.println("Exception Occured : "+e.getMessage());
+							e.printStackTrace();
+						}
+						break;
+						
+					case 9:
+						
+						try
+						{	
+							System.out.println("-*-*THANK YOU-*-*");
+							flag=false;
+						}
+					
+						catch(Exception e)
+						{
+							System.out.println("Exception Occured : "+e.getMessage());
+							e.printStackTrace();
+						}
+						break;		
+				}
+			}
 		}
 	}
+
+	
 }
+
+
+

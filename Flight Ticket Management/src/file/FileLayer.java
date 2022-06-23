@@ -42,7 +42,7 @@ public class FileLayer
 			out.write("Flight-A112-Chennai-Mumbai\n");
 			out.write("Flight-A113-Chennai-Kolkata\n");
 			out.write("Flight-A114-Chennai-Delhi\n");
-			out.write("Flight-A115-Chennai-Mumbai");
+			out.write("Flight-A115-Chennai-Mumbai\n");
 		}
 		catch(IOException e)
 		{
@@ -86,6 +86,7 @@ public class FileLayer
 				str=str+(char)i;
 				if(i==10)
 				{
+					System.out.println(str);
 					newList.add(str);
 					str="";
 				}

@@ -1,0 +1,2 @@
+Business Class : [2, 3, 2],12
+Economy Class : [3, 4, 4],20

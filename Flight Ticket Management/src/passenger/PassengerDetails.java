@@ -2,19 +2,12 @@ package passenger;
 
 public class PassengerDetails 
 {
-	int passengerId;
 	String passengerName;
 	int passengerAge;
 	long passengerNumber;
 	String passengerAddress;
 	String seatPreference;
 	
-	public int getPassengerId() {
-		return passengerId;
-	}
-	public void setPassengerId(int passengerId) {
-		this.passengerId = passengerId;
-	}
 	public String getPassengerName() {
 		return passengerName;
 	}
@@ -48,7 +41,7 @@ public class PassengerDetails
 	
 	@Override
 	public String toString() {
-		return "PassengerDetails [passengerId=" + passengerId + ", passengerName=" + passengerName + ", passengerAge="
+		return "PassengerDetails [ passengerName=" + passengerName + ", passengerAge="
 				+ passengerAge + ", passengerNumber=" + passengerNumber + ", passengerAddress=" + passengerAddress
 				+ "]";
 	}
