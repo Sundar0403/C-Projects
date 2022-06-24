@@ -315,6 +315,7 @@ public class FlightTicketManagement
 		result=result.replace("\n",",");
 		
 		String arr[]=result.split(",");
+		System.out.println(Arrays.toString(arr));
 		int seat[]=new int[arr.length];
 		
 		for(int i=0;i<seat.length;i++)
