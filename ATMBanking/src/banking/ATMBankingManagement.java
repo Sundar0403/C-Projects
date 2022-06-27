@@ -8,8 +8,9 @@ import java.util.Scanner;
 import account.AccountDetails;
 import amount.ATMAmountDetails;
 import logic.ATMBankingLogic;
+import transaction.TransactionDetails;
 
-public class ATMBankingManagement {
+public class ATMBankingManagement extends Thread{
 	
 	Map<Double,ATMAmountDetails> amountMap=new HashMap<>();
 	ATMBankingLogic logicObj=new ATMBankingLogic();
@@ -21,11 +22,8 @@ public class ATMBankingManagement {
 		System.out.println("Enter the File Name to Create  :");
 		String fileName=scan.nextLine();
 		logicObj.writeAmount(fileName,amountMap);
-		List<String> newOne=logicObj.readAmount(fileName);
-		for(int i=0;i<newOne.size();i++)
-		{
-			System.out.println(newOne.get(i)+" ");
-		}
+		String newOne=logicObj.readAmount(fileName);
+			System.out.println(newOne);
 	}
 	
 	public void setAccountDetails() throws Exception
@@ -42,7 +40,6 @@ public class ATMBankingManagement {
 		int pinNo=scan.nextInt();
 		scan.nextLine();
 		accountObj.setPinNumber(pinNo);
-		accountObj.setAccountBalance();
 		
 		System.out.println("Enter the File to Write AccountDetails :");
 		String fileName=scan.nextLine();
@@ -50,18 +47,293 @@ public class ATMBankingManagement {
 		logicObj.setAccountDetails(accountNo,accountObj,fileName);
 	}
 	
-	public void getAccountDetails() throws Exception
+	public void withdraw() throws Exception
+	{	
+		boolean flag=false;
+		
+		while(flag==false)
+		{
+			System.out.println("Enter the Account No : ");
+			int accNo=scan.nextInt();
+			scan.nextLine();
+			
+			System.out.println("Enter the PIN No :");
+			int pinNo=scan.nextInt();
+			scan.nextLine();
+			
+			flag=logicObj.getValidate(accNo,pinNo);
+			
+			if(flag==false)
+			{
+				System.out.println("Invalid Details are Entered :");
+			}
+			
+			else if(flag==true)
+			{
+				System.out.println("Enter the Amount to Withdraw :");
+				double amount=scan.nextInt();
+				scan.nextLine();
+				
+				AccountDetails accountObj=logicObj.Withdraw(accNo,amount);
+				
+				logicObj.printWithdrawReceipt(accountObj,amount);
+				
+				TransactionDetails transObj=new TransactionDetails();
+				int transId=logicObj.getTransNo();
+				
+				transObj.setTransactionId(transId);
+				
+				String transType="Rs."+amount+" Withdraw From Account No :"+accountObj.getAccountNo();
+				transObj.setTransactionType(transType);
+				
+				transObj.setTransactionAmount(amount);
+				
+				transObj.setAccountBalance(accountObj.getAccountBalance());
+				
+				String fileName=accountObj.getAccountNo()+"_transactions.txt";
+				
+				logicObj.setTransactionDetails(transId,transObj,fileName);
+				
+			}
+		}
+	}
+	
+	public void amountTransfer() throws Exception
+	{	
+		boolean flag=false;
+			
+		while(flag==false)
+		{
+			System.out.println("Enter the Account No : ");
+			int accNo=scan.nextInt();
+			scan.nextLine();
+				
+			System.out.println("Enter the PIN No :");
+			int pinNo=scan.nextInt();
+			scan.nextLine();
+				
+			flag=logicObj.getValidate(accNo,pinNo);
+				
+			if(flag==false)
+			{
+				System.out.println("Invalid Details are Entered :");
+			}
+			
+			else if(flag==true)
+			{
+				System.out.println("Enter the Receiver Account No : ");
+				int receiveNo=scan.nextInt();
+				scan.nextLine();
+				
+				System.out.println("Enter the Amount to Withdraw :");
+				double amount=scan.nextInt();
+				scan.nextLine();
+				
+				logicObj.amountTransfer(accNo,receiveNo,amount);
+				
+				logicObj.printTransferReceipt(accNo,receiveNo,amount);
+				
+				TransactionDetails transObj=new TransactionDetails();
+				int transId=logicObj.getTransNo();
+				
+				transObj.setTransactionId(transId);
+				
+				String transType="Rs."+amount+" Transfer From Account No : "+accNo+" To : "+receiveNo;
+				transObj.setTransactionType(transType);
+				
+				transObj.setTransactionAmount(amount);
+				
+				AccountDetails accountObj=logicObj.getAccount(accNo);
+				
+				transObj.setAccountBalance(accountObj.getAccountBalance());
+				
+				String fileName=accountObj.getAccountNo()+"_transactions.txt";
+				
+				logicObj.setTransactionDetails(transId,transObj,fileName);
+				
+				TransactionDetails receiveObj=new TransactionDetails();
+				int receiveId=logicObj.getTransNo();
+				
+				receiveObj.setTransactionId(transId);
+				
+				String transactionType="Rs."+amount+" Received From Account No : "+accNo+" To : "+receiveNo;
+				receiveObj.setTransactionType(transactionType);
+				
+				receiveObj.setTransactionAmount(amount);
+				
+				AccountDetails accountObj1=logicObj.getAccount(accNo);
+				
+				receiveObj.setAccountBalance(accountObj1.getAccountBalance());
+				
+				String filesName=accountObj1.getAccountNo()+"_transactions.txt";
+				
+				logicObj.setTransactionDetails(transId,receiveObj,filesName);
+			}
+		}
+	}
+	
+	public void getAmountFromFile() throws Exception
+	{
+		System.out.println("Enter the File Name to Get Amount Details :");
+		String fileName=scan.nextLine();
+		
+		logicObj.readAmountDetails(fileName);
+	}
+	
+	public void getAccountFromFile() throws Exception
 	{
 		System.out.println("Enter the File Name to Get Account Details :");
 		String fileName=scan.nextLine();
-		String account=logicObj.getAccountDetails(fileName);
-		System.out.println(account);
+		
+		logicObj.setAccountFileDetails(fileName);
+	}
+	
+	public void getTransactionFromFile() throws Exception
+	{
+		System.out.println("Enter the File Name to Get Account Details :");
+		String fileName=scan.nextLine();
+		
+		logicObj.setTransactionFileDetails(fileName);
+	}
+	
+	public void setAmountValues() throws Exception
+	{
+		logicObj.setAmountValues();
 	}
 	
 	public static void main(String args[]) throws Exception
 	{
 		ATMBankingManagement bankingObj=new ATMBankingManagement();
-		bankingObj.getAmountDetails();
-		bankingObj.setAccountDetails();
+		Scanner scan=new Scanner(System.in);
+		int choice=0;
+		
+		boolean flag=true;
+		
+		while(flag)
+		{
+			System.out.println("--------------------------- WELCOME TO ATM BANKING -------------------------------");
+			System.out.println();
+			System.out.println();
+			System.out.println();
+			System.out.println("-*-*-* 1 . READ AMOUNT FROM FILE *-*-*-*");
+			System.out.println("-*-*-* 2 . READ ACCOUNT FROM FILE *-*-*-");
+			System.out.println("-*-*-* 3 . SET ACCOUNT DETAILS *-*-*-*-*");
+			System.out.println("-*-*-* 4 . SET ATM AMOUNT DETAILS -*-*-*");
+			System.out.println("-*-*-* 5 . WITHDRAW AMOUNT -*-*-*-*-**-*");
+			System.out.println("-*-*-* 6 . TRANSFER AMOUNT -*-*-*-*-**-*");
+			System.out.println("-*-*-* 7 . TRANSACTION DETAILS -*-*-*-*-**-*");
+			System.out.println("-*-*-* 8 . EXIT PORTAL -*-*-*-*-*-*-**-*");
+			
+			try
+			{
+				choice=scan.nextInt();
+				scan.nextLine();
+			}
+			catch(Exception e)
+			{
+				System.out.println("Exception Occured : "+e.getMessage());
+				e.printStackTrace();
+			}
+			
+			switch(choice)
+			{
+				case 1:
+						try
+						{
+							bankingObj.getAmountFromFile();
+						}
+						catch(Exception e)
+						{
+							System.out.println("Exception Occured : "+e.getMessage());
+							e.printStackTrace();
+						}
+						break;
+						
+				case 2:
+						try
+						{
+							bankingObj.getAccountFromFile();
+						}
+						catch(Exception e)
+						{
+							System.out.println("Exception Occured : "+e.getMessage());
+							e.printStackTrace();
+						}
+						break;
+						
+				case 3:
+						try
+						{
+							bankingObj.setAccountDetails();
+						}
+						catch(Exception e)
+						{
+							System.out.println("Exception Occured : "+e.getMessage());
+							e.printStackTrace();
+						}
+						break;
+						
+				case 4:
+						try
+						{
+							bankingObj.setAmountValues();
+						}
+						catch(Exception e)
+						{
+							System.out.println("Exception Occured : "+e.getMessage());
+							e.printStackTrace();
+						}
+						break;
+						
+				case 5:
+						try
+						{
+							bankingObj.withdraw();;
+						}
+						catch(Exception e)
+						{
+							System.out.println("Exception Occured : "+e.getMessage());
+							e.printStackTrace();
+						}
+						break;
+					
+				case 6:
+						try
+						{
+							bankingObj.amountTransfer();;
+						}
+						catch(Exception e)
+						{
+							System.out.println("Exception Occured : "+e.getMessage());
+							e.printStackTrace();
+						}
+						break;
+						
+				case 7:
+						try
+						{
+							bankingObj.getTransactionFromFile();
+						}
+						catch(Exception e)
+						{
+							System.out.println("Exception Occured : "+e.getMessage());
+							e.printStackTrace();
+						}
+						break;		
+						
+				case 8:
+						try
+						{
+							flag=false;
+						}
+						catch(Exception e)
+						{
+							System.out.println("Exception Occured : "+e.getMessage());
+							e.printStackTrace();
+						}
+			}
+		}
+		//bankingObj.getAmountDetails();
+		//bankingObj.setAccountDetails();
 	}
 }

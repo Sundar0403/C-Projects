@@ -6,15 +6,18 @@ import java.util.Scanner;
 
 import account.AccountDetails;
 import amount.ATMAmountDetails;
+import transaction.TransactionDetails;
 
 public class CacheLayer 
 {
 	
 	Map<Double,ATMAmountDetails> amountMap=new HashMap<>();
 	Map<Integer,AccountDetails> accountMap=new HashMap<>();
+	Map<Integer,TransactionDetails> transactionMap=new HashMap<>();
+	
 	Scanner scan=new Scanner(System.in);
 
-	public CacheLayer()
+	public void setAmountValues()
 	{
 		System.out.println("Enter the Number of Different Type of Note :");
 		int num=scan.nextInt();
@@ -43,6 +46,26 @@ public class CacheLayer
 	public Map<Integer,AccountDetails> setAccountDetails(int accountNo, AccountDetails accountObj) 
 	{
 		accountMap.put(accountNo, accountObj);
+		//System.out.println(accountMap);
 		return accountMap;
 	}
+	
+	public void setAmountDetails(Double amount,ATMAmountDetails amountObj)
+	{
+		amountMap.put(amount, amountObj);
+	}
+
+	public AccountDetails getAccountDetails(int accNo) 
+	{
+		AccountDetails accountObj=accountMap.get(accNo);
+		return accountObj;
+	}
+
+	public Map<Integer, TransactionDetails> setTransactionDetails(int transId, TransactionDetails transObj) 
+	{
+		transactionMap.put(transId, transObj);
+		
+		return transactionMap;
+	}
+
 }

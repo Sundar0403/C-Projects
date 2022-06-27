@@ -5,12 +5,17 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import account.AccountDetails;
 import amount.ATMAmountDetails;
+import logic.ATMBankingLogic;
+import transaction.TransactionDetails;
 
 public class FileLayer 
 {
@@ -18,6 +23,7 @@ public class FileLayer
 	public File createFile(String fileName) throws Exception
 	{
 		File fileObj=new File(fileName);
+		
 		if(fileObj.createNewFile())
 		{
 			System.out.println("New File is Created :");
@@ -33,7 +39,7 @@ public class FileLayer
 	{
 		File newFile=createFile(fileName);
 		
-		try(FileWriter writer=new FileWriter(newFile,true);)
+		try(FileWriter writer=new FileWriter(newFile);)
 		{
 			writer.write("Denomintaion"+"\t"+"Number"+"\t\t"+"Total"+"\n");
 			for(ATMAmountDetails amountObj : amountMap.values())
@@ -43,33 +49,37 @@ public class FileLayer
 		}
 	}
 	
-	public List<String> readAmount(String fileName) throws Exception
+	public String readAmount(String fileName) throws Exception
 	{
-		List<String> newList=new ArrayList<>();
 		File newFile=createFile(fileName);
-		
+		String result="";
 		try(FileReader reader=new FileReader(newFile);)
 		{
 			try(BufferedReader read=new BufferedReader(reader);)
 			{
-			String temp=read.readLine();
-			   temp=read.readLine();
-			   newList.add(temp);
+				read.readLine();
+			   String temp=read.readLine();
+			   result=result+temp;
+			   result=result+"\n";
 				while(temp!=null)
 				{
 					temp=read.readLine();
-					newList.add(temp);
+					if(temp!=null)
+					{
+						result=result+temp;
+						//System.out.println(result);
+						result=result+"\n";
+					}	
 				}
 			}
 		}
-		newList.remove(null);
-		return newList;
+		return result;
 	}
 
 	public void setAccountDetails(String fileName, Map<Integer, AccountDetails> accountMap) throws Exception 
 	{
 		File fileObj=createFile(fileName);
-		try(FileWriter fileWriter = new FileWriter(fileObj,true);)
+		try(FileWriter fileWriter = new FileWriter(fileObj);)
 		{
 			try(BufferedWriter writer = new BufferedWriter(fileWriter);)
 			{
@@ -95,14 +105,35 @@ public class FileLayer
 				String temp=reader.readLine();
 				temp=reader.readLine();
 				result=result+temp;
+				result=result+"\n";
 				while(temp!=null)
 				{
 					temp=reader.readLine();
-					result=result+temp;
-					result=result+"\n";
+					if(temp!=null)
+					{
+						result=result+temp;
+						result=result+"\n";
+					}	
 				}
 			}
 		}
 		return result;
+	}
+
+	public void setTransactionDetails(String fileName, Map<Integer, TransactionDetails> transMap) throws Exception 
+	{
+		File fileObj=createFile(fileName);
+		try(FileWriter fileWriter = new FileWriter(fileObj);)
+		{
+			try(BufferedWriter writer = new BufferedWriter(fileWriter);)
+			{
+				writer.write("Transaction Id"+"\t"+"Transaction Type"+"\t"+"Transaction Amount"+"\t"+"Account Balance"+"\n");
+				
+				for(TransactionDetails transObj:transMap.values())
+				{
+					writer.write(transObj.getTransactionId()+"\t\t"+transObj.getTransactionType()+"\t\t"+transObj.getTransactionAmount()+"\t\t"+transObj.getAccountBalance()+"\n");
+				}
+			}
+		}
 	}
 }

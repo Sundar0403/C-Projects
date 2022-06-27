@@ -5,7 +5,7 @@ public class AccountDetails
 	int accountNo;
 	String accountHolderName;
 	int pinNumber;
-	double accountBalance;
+	double accountBalance=20000;
 	
 	public int getAccountNo() {
 		return accountNo;
@@ -28,8 +28,8 @@ public class AccountDetails
 	public double getAccountBalance() {
 		return accountBalance;
 	}
-	public void setAccountBalance() {
-		this.accountBalance = 2000;
+	public void setAccountBalance(double accountBalance) {
+		this.accountBalance = accountBalance;
 	}
 	
 	@Override

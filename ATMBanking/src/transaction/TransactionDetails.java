@@ -31,4 +31,10 @@ public class TransactionDetails
 	public void setAccountBalance(double accountBalance) {
 		this.accountBalance = accountBalance;
 	}
+	
+	@Override
+	public String toString() {
+		return "TransactionDetails [transactionId=" + transactionId + ", transactionType=" + transactionType
+				+ ", transactionAmount=" + transactionAmount + ", accountBalance=" + accountBalance + "]";
+	}
 }
