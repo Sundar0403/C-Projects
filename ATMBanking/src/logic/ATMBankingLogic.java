@@ -11,9 +11,11 @@ import amount.ATMAmountDetails;
 import cache.CacheLayer;
 import file.FileLayer;
 import transaction.TransactionDetails;
+import utility.UtilityClass;
 
 public class ATMBankingLogic 
 {
+	UtilityClass utilObj=new UtilityClass();
 	CacheLayer cacheObj=new CacheLayer();
 	FileLayer fileObj=new FileLayer();
 	private int accountNo;
@@ -37,22 +39,29 @@ public class ATMBankingLogic
 
 	public void createFile(String fileName) throws Exception 
 	{
+		utilObj.checkString(fileName);
 		fileObj.createFile(fileName);
 	}
 
 	public void writeAmount(String fileName, Map<Double, ATMAmountDetails> amountMap) throws Exception 
 	{
+		utilObj.checkString(fileName);
+		
 		fileObj.writeAmount(fileName, amountMap);
 	}
 
 	public String readAmount(String fileName) throws Exception 
 	{
+		utilObj.checkString(fileName);
 		String amount=fileObj.readAmount(fileName);
 		return amount;
 	}
 
 	public void setAccountDetails(int accountNo, AccountDetails accountObj, String fileName) throws Exception 
 	{
+		utilObj.checkObject(accountObj);
+		utilObj.checkString(fileName);
+		
 		Map<Integer,AccountDetails> accountMap= cacheObj.setAccountDetails(accountNo,accountObj);
 		System.out.println(accountMap);
 		fileObj.setAccountDetails(fileName,accountMap);
@@ -60,17 +69,20 @@ public class ATMBankingLogic
 
 	public String getAccountDetails(String fileName) throws Exception 
 	{
+		utilObj.checkString(fileName);
 		String result=fileObj.readAccountDetails(getAccountDetails(fileName));
 		return null;
 	}
 	
 	public void setAmountDetails(Double amount,ATMAmountDetails amountObj) throws Exception
 	{
+		utilObj.checkObject(amountObj);
 		cacheObj.setAmountDetails(amount,amountObj);
 	}
 	
 	public void setTransactionDetails(int transId, TransactionDetails transObj) throws Exception 
 	{
+		utilObj.checkObject(transObj);
 		cacheObj.setTransactionDetails(transId,transObj);
 	}
 	
@@ -294,7 +306,7 @@ public class ATMBankingLogic
 	
 	public void readAmountDetails(String fileName) throws Exception
 	{
-		
+		utilObj.checkString(fileName);
 		String result=fileObj.readAmount(fileName);
 		
 		System.out.println(result);
@@ -328,7 +340,7 @@ public class ATMBankingLogic
 	
 	public void setAccountFileDetails(String fileName) throws Exception
 	{
-	
+		utilObj.checkString(fileName);
 		String result=fileObj.readAccountDetails(fileName);
 		
 		System.out.println(result);
@@ -368,7 +380,7 @@ public class ATMBankingLogic
 	
 	public void setTransactionFileDetails(String fileName) throws Exception
 	{
-	
+		utilObj.checkString(fileName);
 		String result=fileObj.readAccountDetails(fileName);
 		
 		System.out.println(result);
@@ -408,11 +420,16 @@ public class ATMBankingLogic
 	
 	public void setAccountFromFile(int accountNo2, AccountDetails accountObj) throws Exception
 	{
+		utilObj.checkObject(accountObj);
 		cacheObj.setAccountDetails(accountNo2, accountObj);
 	}
 
 	public void amountTransfer(int accNo, int receiveNo, double amount) throws Exception 
 	{
+		if(accNo==receiveNo)
+		{
+			throw new Exception("Invalid Details are Entered for Amount Transfer :");
+		}
 		AccountDetails accountObj=cacheObj.getAccountDetails(accNo);
 		
 		double balance=accountObj.getAccountBalance()-amount;
@@ -430,8 +447,9 @@ public class ATMBankingLogic
 		fileObj.setAccountDetails("Account.txt", accountMap);
 	}
 
-	public void printWithdrawReceipt(AccountDetails accountObj,double amount) 
+	public void printWithdrawReceipt(AccountDetails accountObj,double amount) throws Exception
 	{
+		utilObj.checkObject(accountObj);
 		System.out.println("-*-*-* WITHDRAW RECEIPT -*-*-*");
 		System.out.println();
 		System.out.println();
@@ -472,6 +490,7 @@ public class ATMBankingLogic
 
 	public void setTransactionFile(String fileName, Map<Integer, TransactionDetails> transMap) throws Exception 
 	{
+		utilObj.checkString(fileName);
 		fileObj.setTransactionDetails(fileName, transMap);
 	}
 

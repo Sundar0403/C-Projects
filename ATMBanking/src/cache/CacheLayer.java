@@ -7,10 +7,11 @@ import java.util.Scanner;
 import account.AccountDetails;
 import amount.ATMAmountDetails;
 import transaction.TransactionDetails;
+import utility.UtilityClass;
 
 public class CacheLayer 
 {
-	
+	UtilityClass utilObj=new UtilityClass();
 	Map<Double,ATMAmountDetails> amountMap=new HashMap<>();
 	Map<Integer,AccountDetails> accountMap=new HashMap<>();
 	Map<Integer,TransactionDetails> transactionMap=new HashMap<>();
@@ -46,15 +47,17 @@ public class CacheLayer
 		return amountMap;
 	}
 
-	public Map<Integer,AccountDetails> setAccountDetails(int accountNo, AccountDetails accountObj) 
+	public Map<Integer,AccountDetails> setAccountDetails(int accountNo, AccountDetails accountObj) throws Exception
 	{
+		utilObj.checkObject(accountObj);
 		accountMap.put(accountNo, accountObj);
 		//System.out.println(accountMap);
 		return accountMap;
 	}
 	
-	public void setAmountDetails(Double amount,ATMAmountDetails amountObj)
+	public void setAmountDetails(Double amount,ATMAmountDetails amountObj) throws Exception
 	{
+		utilObj.checkObject(amountObj);
 		amountMap.put(amount, amountObj);
 	}
 
@@ -64,8 +67,9 @@ public class CacheLayer
 		return accountObj;
 	}
 
-	public void setTransactionDetails(int transId, TransactionDetails transObj) 
+	public void setTransactionDetails(int transId, TransactionDetails transObj) throws Exception
 	{
+		utilObj.checkObject(transObj);
 		transactionMap.put(transId, transObj);
 	}
 	

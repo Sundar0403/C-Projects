@@ -16,12 +16,14 @@ import account.AccountDetails;
 import amount.ATMAmountDetails;
 import logic.ATMBankingLogic;
 import transaction.TransactionDetails;
+import utility.UtilityClass;
 
 public class FileLayer 
 {
-	
+	UtilityClass utilObj=new UtilityClass();
 	public File createFile(String fileName) throws Exception
 	{
+		utilObj.checkString(fileName);
 		File fileObj=new File(fileName);
 		
 		if(fileObj.createNewFile())
@@ -37,6 +39,7 @@ public class FileLayer
 	
 	public void writeAmount(String fileName,Map<Double,ATMAmountDetails> amountMap) throws Exception
 	{
+		utilObj.checkString(fileName);
 		File newFile=createFile(fileName);
 		
 		try(FileWriter writer=new FileWriter(newFile);)
@@ -51,6 +54,7 @@ public class FileLayer
 	
 	public String readAmount(String fileName) throws Exception
 	{
+		utilObj.checkString(fileName);
 		File newFile=createFile(fileName);
 		String result="";
 		try(FileReader reader=new FileReader(newFile);)
@@ -78,6 +82,7 @@ public class FileLayer
 
 	public void setAccountDetails(String fileName, Map<Integer, AccountDetails> accountMap) throws Exception 
 	{
+		utilObj.checkString(fileName);
 		File fileObj=createFile(fileName);
 		try(FileWriter fileWriter = new FileWriter(fileObj);)
 		{
@@ -95,6 +100,8 @@ public class FileLayer
 	
 	public String readAccountDetails(String fileName) throws Exception
 	{
+		utilObj.checkString(fileName);
+		
 		File fileObj=new File(fileName);
 		String result="";
 		
@@ -122,6 +129,7 @@ public class FileLayer
 
 	public void setTransactionDetails(String fileName, Map<Integer, TransactionDetails> transMap) throws Exception 
 	{
+		utilObj.checkString(fileName);
 		File fileObj=createFile(fileName);
 		try(FileWriter fileWriter = new FileWriter(fileObj);)
 		{
