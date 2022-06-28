@@ -24,14 +24,17 @@ public class CacheLayer
 		scan.nextLine();
 		for(int i=0;i<num;i++)
 		{
-			ATMAmountDetails obj=new ATMAmountDetails();
+			
 			System.out.println("Enter the Amount :");
 			double amount=scan.nextDouble();
+			
 			scan.nextLine();
+			ATMAmountDetails obj=amountMap.get(amount);
 			obj.setAmount(amount);
 			System.out.println("Enter the Note Numbers :");
 			int nos=scan.nextInt();
 			scan.nextLine();
+			nos=nos+obj.getNoteNos();
 			obj.setNoteNos(nos);
 			obj.setTotal();
 			amountMap.put(amount, obj);
@@ -61,10 +64,13 @@ public class CacheLayer
 		return accountObj;
 	}
 
-	public Map<Integer, TransactionDetails> setTransactionDetails(int transId, TransactionDetails transObj) 
+	public void setTransactionDetails(int transId, TransactionDetails transObj) 
 	{
 		transactionMap.put(transId, transObj);
-		
+	}
+	
+	public Map<Integer,TransactionDetails> getTransactionMap()
+	{
 		return transactionMap;
 	}
 

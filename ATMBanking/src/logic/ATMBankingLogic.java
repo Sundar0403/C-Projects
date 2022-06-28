@@ -69,11 +69,15 @@ public class ATMBankingLogic
 		cacheObj.setAmountDetails(amount,amountObj);
 	}
 	
-	public void setTransactionDetails(int transId, TransactionDetails transObj, String fileName) throws Exception 
+	public void setTransactionDetails(int transId, TransactionDetails transObj) throws Exception 
 	{
-		Map<Integer,TransactionDetails> transMap=cacheObj.setTransactionDetails(transId,transObj);
-		System.out.println(transMap);
-		fileObj.setTransactionDetails(fileName,transMap);
+		cacheObj.setTransactionDetails(transId,transObj);
+	}
+	
+	public Map<Integer, TransactionDetails> getTransactionDetails() throws Exception 
+	{
+		Map<Integer,TransactionDetails> transMap=cacheObj.getTransactionMap();
+		return transMap;
 	}
 	
 	public AccountDetails getAccount(int accNo) throws Exception
@@ -111,12 +115,6 @@ public class ATMBankingLogic
 		
 		else
 		{
-			balance=balance-amount;
-			accountObj.setAccountBalance(balance);
-			
-			Map<Integer,AccountDetails> accountMap=cacheObj.setAccountDetails(accNo,accountObj);
-			
-			fileObj.setAccountDetails("Account.txt",accountMap);
 			
 			Map<Double,ATMAmountDetails> amountMap=cacheObj.getMap();
 			if(amount>3000 && amount<5000)
@@ -124,6 +122,11 @@ public class ATMBankingLogic
 				amount=amount-2000.0;
 				
 				ATMAmountDetails amountObj=amountMap.get(2000.0);
+				
+				if(amountObj.getNoteNos()==0)
+				{
+					throw new Exception("Unable to Process Your Request Now :");
+				}
 				
 				int notes=amountObj.getNoteNos()-1;
 				amountObj.setNoteNos(notes);
@@ -133,6 +136,11 @@ public class ATMBankingLogic
 				cacheObj.setAmountDetails(2000.0, amountObj);
 				
 				ATMAmountDetails amountObj2=amountMap.get(500.0);
+				if(amountObj2.getNoteNos()==0)
+				{
+					throw new Exception("Unable to Process Your Request Now :");
+				}
+				
 				double temp=amount-500;
 				amount=amount-temp;
 				int no=(int)temp/500;
@@ -145,6 +153,10 @@ public class ATMBankingLogic
 				cacheObj.setAmountDetails(500.0, amountObj2);
 				
 				ATMAmountDetails amountObj1=amountMap.get(100.0);
+				if(amountObj1.getNoteNos()==0)
+				{
+					throw new Exception("Unable to Process Your Request Now :");
+				}
 				
 				int oneHund=(int)amount/100;
 				
@@ -162,6 +174,10 @@ public class ATMBankingLogic
 				amount=amount-4000.0;
 				
 				ATMAmountDetails amountObj=amountMap.get(2000.0);
+				if(amountObj.getNoteNos()==0)
+				{
+					throw new Exception("Unable to Process Your Request Now :");
+				}
 				
 				int notes=amountObj.getNoteNos()-2;
 				amountObj.setNoteNos(notes);
@@ -171,17 +187,28 @@ public class ATMBankingLogic
 				cacheObj.setAmountDetails(2000.0, amountObj);
 				
 				ATMAmountDetails amountObj2=amountMap.get(500.0);
+				if(amountObj2.getNoteNos()==0)
+				{
+					throw new Exception("Unable to Process Your Request Now :");
+				}
+				
 				amount=amount-500;
 				int no=(int)amount/500;
 				
 				int fiveHundred=amountObj2.getNoteNos()-no;
 				amountObj2.setNoteNos(fiveHundred);
 				
+				
 				amountObj2.setTotal();
 				
 				cacheObj.setAmountDetails(500.0, amountObj2);
 				
 				ATMAmountDetails amountObj1=amountMap.get(100.0);
+				
+				if(amountObj1.getNoteNos()==0)
+				{
+					throw new Exception("Unable to Process Your Request Now :");
+				}
 				
 				int oneHund=(int)amount/100;
 				
@@ -197,6 +224,11 @@ public class ATMBankingLogic
 			else if(amount<3000 && amount>1000)
 			{
 				ATMAmountDetails amountObj2=amountMap.get(500.0);
+				if(amountObj2.getNoteNos()==0)
+				{
+					throw new Exception("Unable to Process Your Request Now :");
+				}
+				
 				double temp=amount-500;
 				amount=amount-temp;
 				int no=(int)temp/500;
@@ -209,6 +241,11 @@ public class ATMBankingLogic
 				cacheObj.setAmountDetails(500.0, amountObj2);
 				
 				ATMAmountDetails amountObj1=amountMap.get(100.0);
+				if(amountObj1.getNoteNos()==0)
+				{
+					throw new Exception("Unable to Process Your Request Now :");
+				}
+				
 				
 				int oneHund=(int)amount/100;
 				
@@ -224,6 +261,11 @@ public class ATMBankingLogic
 			else if(amount<1000)
 			{
 				ATMAmountDetails amountObj1=amountMap.get(100.0);
+				if(amountObj1.getNoteNos()==0)
+				{
+					throw new Exception("Unable to Process Your Request Now :");
+				}
+				
 				
 				int oneHund=(int)amount/100;
 				
@@ -235,6 +277,14 @@ public class ATMBankingLogic
 				
 				cacheObj.setAmountDetails(100.0, amountObj1);
 			}
+			
+			balance=balance-amount;
+			accountObj.setAccountBalance(balance);
+			
+			Map<Integer,AccountDetails> accountMap=cacheObj.setAccountDetails(accNo,accountObj);
+			
+			fileObj.setAccountDetails("Account.txt",accountMap);
+			
 			fileObj.writeAmount("Amount.txt",amountMap);
 		
 		}
@@ -350,6 +400,7 @@ public class ATMBankingLogic
 			transObj.setTransactionAmount(amount);
 			
 			double balance=Double.parseDouble(inner[3]);
+			transObj.setAccountBalance(balance);
 			
 			cacheObj.setTransactionDetails(transNo,transObj);
 		}
@@ -396,9 +447,11 @@ public class ATMBankingLogic
 		System.out.println("Amount Withdraw Done Successfully :");
 	}
 
-	public void setAmountValues() 
+	public void setAmountValues() throws Exception 
 	{
 		cacheObj.setAmountValues();
+		Map<Double,ATMAmountDetails> amountMap=cacheObj.getMap();
+		writeAmount("Amount.txt",amountMap);
 	}
 
 	public void printTransferReceipt(int accNo, int receiveNo, double amount) 
@@ -415,6 +468,11 @@ public class ATMBankingLogic
 		System.out.println();
 		System.out.println();
 		System.out.println("Amount Transfer Done Successfully :");
+	}
+
+	public void setTransactionFile(String fileName, Map<Integer, TransactionDetails> transMap) throws Exception 
+	{
+		fileObj.setTransactionDetails(fileName, transMap);
 	}
 
 }

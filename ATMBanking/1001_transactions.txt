@@ -1,0 +1,2 @@
+Transaction Id	Transaction Type	Transaction Amount	Account Balance
+1		Rs.500.0 Withdraw From Account No :1001		500.0		4500.0

@@ -1,4 +1,4 @@
 AccountNo	AccountHolderName	PIN No	AccountBalance
-1001		Mani Sundar		1410		6500.0
-1002		Thilakraj		1111		16500.0
-1003		Suryaraj		1234		19500.0
+1001		Mani Sundar		1410		4500.0
+1002		Thilakraj		1111		13500.0
+1003		Suryaraj		1234		24000.0

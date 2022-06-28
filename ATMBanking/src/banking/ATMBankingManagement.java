@@ -15,6 +15,7 @@ public class ATMBankingManagement extends Thread{
 	Map<Double,ATMAmountDetails> amountMap=new HashMap<>();
 	ATMBankingLogic logicObj=new ATMBankingLogic();
 	Scanner scan=new Scanner(System.in);
+	int accountNo=0;
 	
 	public void getAmountDetails() throws Exception
 	{
@@ -79,22 +80,47 @@ public class ATMBankingManagement extends Thread{
 				logicObj.printWithdrawReceipt(accountObj,amount);
 				
 				TransactionDetails transObj=new TransactionDetails();
+				String fileName=accountObj.getAccountNo()+"_transactions.txt";
+				logicObj.setTransactionFileDetails(fileName);
 				int transId=logicObj.getTransNo();
 				
 				transObj.setTransactionId(transId);
 				
-				String transType="Rs."+amount+" Withdraw From Account No :"+accountObj.getAccountNo();
+				accountNo=accountObj.getAccountNo();
+				String transType="Rs."+amount+" Withdraw From Account No :"+accountNo;
 				transObj.setTransactionType(transType);
 				
 				transObj.setTransactionAmount(amount);
 				
 				transObj.setAccountBalance(accountObj.getAccountBalance());
 				
-				String fileName=accountObj.getAccountNo()+"_transactions.txt";
-				
-				logicObj.setTransactionDetails(transId,transObj,fileName);
+				logicObj.setTransactionDetails(transId,transObj);
 				
 			}
+		}
+	}
+	
+	private void loadCash() throws Exception 
+	{
+		logicObj.setAmountValues();
+	}
+	
+	public void run()
+	{
+		try 
+		{
+			sleep(5000);
+			String fileName=accountNo+"_transactions.txt";
+			Map<Integer,TransactionDetails> transMap=logicObj.getTransactionDetails();
+			logicObj.setTransactionFile(fileName,transMap);
+		} 
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
 		}
 	}
 	
@@ -134,6 +160,8 @@ public class ATMBankingManagement extends Thread{
 				logicObj.printTransferReceipt(accNo,receiveNo,amount);
 				
 				TransactionDetails transObj=new TransactionDetails();
+				String fileName=accNo+"_transactions.txt";
+				logicObj.setTransactionFileDetails(fileName);
 				int transId=logicObj.getTransNo();
 				
 				transObj.setTransactionId(transId);
@@ -147,11 +175,15 @@ public class ATMBankingManagement extends Thread{
 				
 				transObj.setAccountBalance(accountObj.getAccountBalance());
 				
-				String fileName=accountObj.getAccountNo()+"_transactions.txt";
+				logicObj.setTransactionDetails(transId,transObj);
 				
-				logicObj.setTransactionDetails(transId,transObj,fileName);
+				Map<Integer,TransactionDetails> transMap=logicObj.getTransactionDetails();
+				logicObj.setTransactionFile(fileName,transMap);
 				
 				TransactionDetails receiveObj=new TransactionDetails();
+				String filesName=receiveNo+"_transactions.txt";
+				logicObj.setTransactionFileDetails(filesName);
+				
 				int receiveId=logicObj.getTransNo();
 				
 				receiveObj.setTransactionId(transId);
@@ -161,13 +193,14 @@ public class ATMBankingManagement extends Thread{
 				
 				receiveObj.setTransactionAmount(amount);
 				
-				AccountDetails accountObj1=logicObj.getAccount(accNo);
+				AccountDetails accountObj1=logicObj.getAccount(receiveNo);
 				
 				receiveObj.setAccountBalance(accountObj1.getAccountBalance());
 				
-				String filesName=accountObj1.getAccountNo()+"_transactions.txt";
+				logicObj.setTransactionDetails(transId,receiveObj);
 				
-				logicObj.setTransactionDetails(transId,receiveObj,filesName);
+				Map<Integer,TransactionDetails> transsMap=logicObj.getTransactionDetails();
+				logicObj.setTransactionFile(filesName,transsMap);
 			}
 		}
 	}
@@ -204,6 +237,7 @@ public class ATMBankingManagement extends Thread{
 	public static void main(String args[]) throws Exception
 	{
 		ATMBankingManagement bankingObj=new ATMBankingManagement();
+
 		Scanner scan=new Scanner(System.in);
 		int choice=0;
 		
@@ -221,11 +255,15 @@ public class ATMBankingManagement extends Thread{
 			System.out.println("-*-*-* 4 . SET ATM AMOUNT DETAILS -*-*-*");
 			System.out.println("-*-*-* 5 . WITHDRAW AMOUNT -*-*-*-*-**-*");
 			System.out.println("-*-*-* 6 . TRANSFER AMOUNT -*-*-*-*-**-*");
-			System.out.println("-*-*-* 7 . TRANSACTION DETAILS -*-*-*-*-**-*");
+			System.out.println("-*-*-* 7 . TRANSACTION DETAILS -*-*-*-*-");
 			System.out.println("-*-*-* 8 . EXIT PORTAL -*-*-*-*-*-*-**-*");
+			
+			System.out.println();
+			System.out.println();
 			
 			try
 			{
+				System.out.println("Enter Your Choice :");
 				choice=scan.nextInt();
 				scan.nextLine();
 			}
@@ -288,7 +326,8 @@ public class ATMBankingManagement extends Thread{
 				case 5:
 						try
 						{
-							bankingObj.withdraw();;
+							bankingObj.withdraw();
+							bankingObj.start();
 						}
 						catch(Exception e)
 						{
@@ -300,7 +339,8 @@ public class ATMBankingManagement extends Thread{
 				case 6:
 						try
 						{
-							bankingObj.amountTransfer();;
+							bankingObj.amountTransfer();
+							bankingObj.start();
 						}
 						catch(Exception e)
 						{
@@ -319,7 +359,7 @@ public class ATMBankingManagement extends Thread{
 							System.out.println("Exception Occured : "+e.getMessage());
 							e.printStackTrace();
 						}
-						break;		
+						break;
 						
 				case 8:
 						try
@@ -336,4 +376,6 @@ public class ATMBankingManagement extends Thread{
 		//bankingObj.getAmountDetails();
 		//bankingObj.setAccountDetails();
 	}
+
+	
 }
