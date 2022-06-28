@@ -17,7 +17,7 @@ public class ATMBankingManagement extends Thread{
 	Scanner scan=new Scanner(System.in);
 	int accountNo=0;
 	
-	public void getAmountDetails() throws Exception
+	private void getAmountDetails() throws Exception
 	{
 		amountMap=logicObj.getMap();
 		System.out.println("Enter the File Name to Create  :");
@@ -27,7 +27,7 @@ public class ATMBankingManagement extends Thread{
 			System.out.println(newOne);
 	}
 	
-	public void setAccountDetails() throws Exception
+	private void setAccountDetails() throws Exception
 	{
 		AccountDetails accountObj=new AccountDetails();
 		int accountNo=logicObj.getAccountNo();
@@ -48,7 +48,7 @@ public class ATMBankingManagement extends Thread{
 		logicObj.setAccountDetails(accountNo,accountObj,fileName);
 	}
 	
-	public void withdraw() throws Exception
+	private void withdraw() throws Exception
 	{	
 		boolean flag=false;
 		
@@ -100,11 +100,6 @@ public class ATMBankingManagement extends Thread{
 		}
 	}
 	
-	private void loadCash() throws Exception 
-	{
-		logicObj.setAmountValues();
-	}
-	
 	public void run()
 	{
 		try 
@@ -124,7 +119,7 @@ public class ATMBankingManagement extends Thread{
 		}
 	}
 	
-	public void amountTransfer() throws Exception
+	private void amountTransfer() throws Exception
 	{	
 		boolean flag=false;
 			
@@ -186,7 +181,7 @@ public class ATMBankingManagement extends Thread{
 				
 				int receiveId=logicObj.getTransNo();
 				
-				receiveObj.setTransactionId(transId);
+				receiveObj.setTransactionId(receiveId);
 				
 				String transactionType="Rs."+amount+" Received From Account No : "+accNo+" To : "+receiveNo;
 				receiveObj.setTransactionType(transactionType);
@@ -205,7 +200,7 @@ public class ATMBankingManagement extends Thread{
 		}
 	}
 	
-	public void getAmountFromFile() throws Exception
+	private void getAmountFromFile() throws Exception
 	{
 		System.out.println("Enter the File Name to Get Amount Details :");
 		String fileName=scan.nextLine();
@@ -213,7 +208,7 @@ public class ATMBankingManagement extends Thread{
 		logicObj.readAmountDetails(fileName);
 	}
 	
-	public void getAccountFromFile() throws Exception
+	private void getAccountFromFile() throws Exception
 	{
 		System.out.println("Enter the File Name to Get Account Details :");
 		String fileName=scan.nextLine();
@@ -221,7 +216,7 @@ public class ATMBankingManagement extends Thread{
 		logicObj.setAccountFileDetails(fileName);
 	}
 	
-	public void getTransactionFromFile() throws Exception
+	private void getTransactionFromFile() throws Exception
 	{
 		System.out.println("Enter the File Name to Get Account Details :");
 		String fileName=scan.nextLine();
@@ -229,7 +224,7 @@ public class ATMBankingManagement extends Thread{
 		logicObj.setTransactionFileDetails(fileName);
 	}
 	
-	public void setAmountValues() throws Exception
+	private void setAmountValues() throws Exception
 	{
 		logicObj.setAmountValues();
 	}
