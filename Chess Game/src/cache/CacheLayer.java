@@ -54,13 +54,13 @@ public class CacheLayer
 					}
 					if(j==4)
 					{
-						coin="W_Q";
+						coin="W_K";
 						board.put(pos, coin);
 						coins.put(coin,"White");
 					}
 					if(j==5)
 					{
-						coin="W_K";
+						coin="W_Q";
 						board.put(pos,coin);
 						coins.put(coin,"White");
 					}
@@ -109,10 +109,8 @@ public class CacheLayer
 					board.put(pos,"");
 				}
 			}
+			
 		}
-		
-		board.put("3A","W_R");
-		board.put("3D","W_Q");
 		System.out.println(board.toString());
 	}
 	
@@ -131,9 +129,26 @@ public class CacheLayer
 	{
 		return board.get(pos);
 	}
+	
+	public void setCoin(String pos,String coin)
+	{
+		board.put(pos, coin);
+	}
 
 	public String getType(String coin) 
 	{
 		return coins.get(coin);
+	}
+
+	public String getBoardPos(String coin) 
+	{
+		for(Map.Entry<String,String> newSet : board.entrySet())
+		{
+			if(newSet.getValue().equals(coin))
+			{
+				return newSet.getKey();
+			}
+		}
+		return "";
 	}	
 }
