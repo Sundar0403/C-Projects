@@ -1,7 +1,9 @@
 package cache;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -9,6 +11,7 @@ public class CacheLayer
 {
 	Map<String,String> board=new LinkedHashMap<>();
 	Map<String,String> coins=new LinkedHashMap<>();
+	Map<String,String> temp=new LinkedHashMap<>();
 	Scanner scan=new Scanner(System.in);
 	
 	public CacheLayer()
@@ -111,6 +114,7 @@ public class CacheLayer
 			}
 			
 		}
+		board.put("5D","W_Q");
 		System.out.println(board.toString());
 	}
 	
@@ -150,5 +154,19 @@ public class CacheLayer
 			}
 		}
 		return "";
-	}	
+	}
+
+	public List<String> getCoinPositions(String coin) 
+	{
+		List<String> rookList=new ArrayList<>();
+		for(Map.Entry<String,String> newSet : board.entrySet())
+		{
+			if(newSet.getValue().equals(coin))
+			{
+				rookList.add(newSet.getKey());
+			}
+		}
+		return rookList;
+	}
+	
 }

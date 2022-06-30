@@ -9,6 +9,7 @@ import cache.CacheLayer;
 public class ChessLogic 
 {
 	CacheLayer cacheObj=new CacheLayer();
+	String kingPos="";
 	public void getPrint() throws Exception
 	{
 		Map<String,String> boardMap = cacheObj.getMap();
@@ -297,7 +298,7 @@ public class ChessLogic
 				}
 				else if(cacheObj.getCoin(temp)!="" && cacheObj.getCoin(temp)!=null)
 				{
-					break;
+					continue;
 				}
 				if(i==start+1)
 				{
@@ -312,7 +313,7 @@ public class ChessLogic
 						}
 						else
 						{
-							break;
+							continue;
 						}
 					}
 					char ch1=(char)((int)arr[arr.length-1].charAt(0)-1);
@@ -326,19 +327,21 @@ public class ChessLogic
 						}
 						else
 						{
-							break;
+							continue;
 						}
 					}
 				}
 			}
 		}
+		
 		else
 		{
+			end=start-2;
 			if(start!=7)
 			{
 				end++;
 			}
-			for(int i=start-1;i>=start-2;i--)
+			for(int i=start-1;i>=end;i--)
 			{
 				String temp=i+arr[arr.length-1];
 				if(cacheObj.getCoin(temp)=="")
@@ -347,7 +350,7 @@ public class ChessLogic
 				}
 				else if(cacheObj.getCoin(temp)!="" && cacheObj.getCoin(temp)!=null)
 				{
-					break;
+					continue;
 				}
 				if(i==start-1)
 				{
@@ -362,7 +365,7 @@ public class ChessLogic
 						}
 						else
 						{
-							break;
+							continue;
 						}
 					}
 					char ch1=(char)((int)arr[arr.length-1].charAt(0)-1);
@@ -376,7 +379,7 @@ public class ChessLogic
 						}
 						else
 						{
-							break;
+							continue;
 						}
 					}
 				}
@@ -997,4 +1000,135 @@ public class ChessLogic
 		}
 		return castling;
 	}
+	public String getCheckStatus(List<String> positions, String coin) 
+	{
+		
+		if(positions.contains(coin))
+		{
+			return "Check";
+		}
+		return "No";
+	}
+	public List<String> getWhitePositions(String coinType) 
+	{
+		List<String> possiblity=new ArrayList<>();
+		
+		List<String> pawn=cacheObj.getCoinPositions("W_P");
+		for(int i=0;i<pawn.size();i++)
+		{
+			List<String> temp=isPawn(pawn.get(i),"W_P",coinType);
+			
+			for(int j=0;j<temp.size();j++)
+			{
+				possiblity.add(temp.get(i));
+			}
+		}
+		List<String> night=cacheObj.getCoinPositions("W_N");
+		for(int i=0;i<night.size();i++)
+		{
+			List<String> temp=isNight(night.get(i),"W_N",coinType);
+			
+			for(int j=0;j<temp.size();j++)
+			{
+				possiblity.add(temp.get(i));
+			}
+		}
+		List<String> rook=cacheObj.getCoinPositions("W_R");
+		for(int i=0;i<rook.size();i++)
+		{
+			List<String> temp=isRook(rook.get(i),"W_R",coinType);
+			
+			for(int j=0;j<temp.size();j++)
+			{
+				possiblity.add(temp.get(i));
+			}
+		}
+		List<String> first=cacheObj.getCoinPositions("W_Q");
+		for(int i=0;i<first.size();i++)
+		{
+			List<String> temp=isRook(first.get(i),"W_Q",coinType);
+			
+			for(int j=0;j<temp.size();j++)
+			{
+				possiblity.add(temp.get(i));
+			}
+		}
+		List<String> second=cacheObj.getCoinPositions("W_Q");
+		for(int i=0;i<second.size();i++)
+		{
+			List<String> temp=isBishop(second.get(i),"W_Q",coinType);
+			
+			for(int j=0;j<temp.size();j++)
+			{
+				possiblity.add(temp.get(i));
+			}
+		}
+		
+		
+		return possiblity;
+	}
+	public List<String> getBlackPositions(String coinType) 
+	{
+		List<String> possiblity=new ArrayList<>();
+		
+		List<String> pawn=cacheObj.getCoinPositions("B_P");
+		for(int i=0;i<pawn.size();i++)
+		{
+			List<String> temp=isPawn(pawn.get(i),"B_P",coinType);
+			
+			for(int j=0;j<temp.size();j++)
+			{
+				possiblity.add(temp.get(i));
+			}
+		}
+		List<String> night=cacheObj.getCoinPositions("B_N");
+		for(int i=0;i<night.size();i++)
+		{
+			List<String> temp=isNight(night.get(i),"B_N",coinType);
+			
+			for(int j=0;j<temp.size();j++)
+			{
+				possiblity.add(temp.get(i));
+			}
+		}
+		List<String> rook=cacheObj.getCoinPositions("B_R");
+		for(int i=0;i<rook.size();i++)
+		{
+			List<String> temp=isRook(rook.get(i),"B_R",coinType);
+			
+			for(int j=0;j<temp.size();j++)
+			{
+				possiblity.add(temp.get(i));
+			}
+		}
+		List<String> first=cacheObj.getCoinPositions("B_Q");
+		for(int i=0;i<first.size();i++)
+		{
+			List<String> temp=isRook(first.get(i),"B_Q",coinType);
+			
+			for(int j=0;j<temp.size();j++)
+			{
+				possiblity.add(temp.get(i));
+			}
+		}
+		List<String> second=cacheObj.getCoinPositions("B_Q");
+		for(int i=0;i<second.size();i++)
+		{
+			List<String> temp=isBishop(second.get(i),"B_Q",coinType);
+			
+			for(int j=0;j<temp.size();j++)
+			{
+				possiblity.add(temp.get(i));
+			}
+		}
+		
+		
+		return possiblity;
+	}
+
+
+
 }
+
+
+
