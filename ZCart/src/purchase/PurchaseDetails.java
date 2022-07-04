@@ -1,15 +1,13 @@
 package purchase;
 
-import java.util.List;
-
 public class PurchaseDetails 
 {
 	int invoiceNo;
 	long invoiceDate;
-	List<String> category;
-	List<String>  brand;
-	List<String> model;
-	List<String> price;
+	String category;
+	String brand;
+	String model;
+	double price;
 	
 	public int getInvoiceNo() {
 		return invoiceNo;
@@ -23,32 +21,36 @@ public class PurchaseDetails
 	public void setInvoiceDate(long invoiceDate) {
 		this.invoiceDate = invoiceDate;
 	}
-	public List<String> getCategory() {
+	public String getCategory() {
 		return category;
 	}
-	public void setCategory(List<String> category) {
+	public void setCategory(String category) {
 		this.category = category;
 	}
-	public List<String> getBrand() {
+	public String getBrand() {
 		return brand;
 	}
-	public void setBrand(List<String> brand) {
+	public void setBrand(String brand) {
 		this.brand = brand;
 	}
-	public List<String> getModel() {
+	public String getModel() {
 		return model;
 	}
-	public void setModel(List<String> model) {
+	public void setModel(String model) {
 		this.model = model;
 	}
-	public List<String> getPrice() {
+	public double getPrice() {
 		return price;
 	}
-	public void setPrice(List<String> price) {
+	public void setPrice(double price) {
 		this.price = price;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return "PurchaseDetails [invoiceNo=" + invoiceNo + ", invoiceDate=" + invoiceDate + ", category=" + category
+				+ ", brand=" + brand + ", model=" + model + ", price=" + price + "]";
+	}
 	
 	
 }

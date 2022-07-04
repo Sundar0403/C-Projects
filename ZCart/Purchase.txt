@@ -1,0 +1,2 @@
+Invoice No	Invoice Date	Category	Brand	Model	Price
+114401		04 23 2022 07:23:21		Mobile		Redmi		Note11		14000.0
