@@ -160,13 +160,20 @@ public class FileLayer {
 		String result = readCustomerOrKartDetails(fileName);
 
 		String arr[] = result.split("\n");
-		List<KartDetails> kartList = new ArrayList<>();
+		String firstCategory="";
+		List<KartDetails> kartList=new ArrayList<>();; 
 
 		for (int i = 0; i < arr.length; i++) {
+			
 			KartDetails kartObj = new KartDetails();
 			String newArr[] = arr[i].split("\t\t");
 
 			String category = newArr[0];
+			if(!firstCategory.equals(category))
+			{
+				firstCategory=category;
+				kartList=new ArrayList<>();
+			}
 			kartObj.setCategory(category);
 
 			String brand = newArr[1];

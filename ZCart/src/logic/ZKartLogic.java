@@ -75,7 +75,12 @@ public class ZKartLogic
 	
 	public void setInvoiceNo() throws Exception
 	{
-		invoiceNo=cacheObj.getInvoiceNo();
+		Map<Integer,List<PurchaseDetails>> purchase=cacheObj.getInvoiceNo();
+		for(int invoiceNo : purchase.keySet() )
+		{
+			this.invoiceNo=invoiceNo;
+		}
+		System.out.println(invoiceNo);
 	}
 
 	public void generateInvoice(List<PurchaseDetails> purchase, double totalAmount, int creditsUsed,int creditsGained) 

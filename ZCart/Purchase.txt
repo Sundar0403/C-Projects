@@ -1,2 +1,3 @@
 Invoice No	Invoice Date	Category	Brand	Model	Price
-114401		04 23 2022 07:23:21		Mobile		Redmi		Note11		14000.0
+114401		07 05 2022 12:22:18		Mobile		Redmi		Note11		14000.0
+114402		07 05 2022 12:26:11		Laptop		Acer		Aspire		49000.0

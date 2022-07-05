@@ -12,9 +12,9 @@ import purchase.PurchaseDetails;
 public class CacheLayer 
 {
 	static Map<String,CustomerDetails> customerMap=new HashMap<>();
-	static Map<String,List<KartDetails>> kartMap=new HashMap<>();
-	static Map<Integer,List<PurchaseDetails>> purchaseMap=new HashMap<>();
-	int invoiceNo=0;
+	 static Map<String,List<KartDetails>> kartMap=new HashMap<>();
+	 static Map<Integer,List<PurchaseDetails>> purchaseMap=new HashMap<>();
+	int invoiceNo;
 	
 	public Map<String, List<KartDetails>> setKartDetails(String category, List<KartDetails> kartList, String fileName) throws Exception
 	{
@@ -46,13 +46,14 @@ public class CacheLayer
 	{
 		purchaseMap.put(invoiceNo, purchase);
 		this.invoiceNo=invoiceNo;
+		System.out.println(this.invoiceNo);
 		System.out.println(purchaseMap);
 		return purchaseMap;
 	}
 	
-	public int getInvoiceNo()
+	public Map<Integer, List<PurchaseDetails>> getInvoiceNo()
 	{
-		return invoiceNo;
+		return purchaseMap;
 	}
 	
 }

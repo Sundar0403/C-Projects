@@ -233,7 +233,8 @@ public class ZKart
 				System.out.println("Enter the Amount Payable :");
 				double payable=scan.nextDouble();
 				creditsGained=(int)(payable/1000)*20;
-				customerObj.setCustomerCredits(creditsGained);
+				int creditsRemains=customerObj.getCustomerCredits();
+				customerObj.setCustomerCredits(creditsRemains+creditsGained);
 				logicObj.setCustomerDetails(userName,customerObj,"Customer.txt");
 				scan.nextLine();
 			}
@@ -250,61 +251,103 @@ public class ZKart
 	
 	private void readCustomerDetails() throws Exception
 	{
-		System.out.println("Enter the FileName :");
-		String fileName=scan.nextLine();
-		logicObj.readCustomerDetails(fileName);
+		if(role.equals("admin"))
+		{
+			System.out.println("Enter the FileName :");
+			String fileName=scan.nextLine();
+			logicObj.readCustomerDetails(fileName);
+		}
+		else
+		{
+			System.out.println("Only Admins Are Allowd to Access it :");
+		}
 	}
 	
 	private void readKartDetails() throws Exception
 	{
-		System.out.println("Enter the FileName :");
-		String fileName=scan.nextLine();
-		logicObj.readKartDetails(fileName);
+		if(role.equals("admin"))
+		{
+			System.out.println("Enter the FileName :");
+			String fileName=scan.nextLine();
+			logicObj.readKartDetails(fileName);
+		}
+		else
+		{
+			System.out.println("Only Admins Are Allowd to Access it :");
+		}
 	}
 	
 	private void readPurchaseDetails() throws Exception
 	{
-		System.out.println("Enter the FileName :");
-		String fileName=scan.nextLine();
-		logicObj.readPurchaseDetails(fileName);
+		if(role.equals("admin"))
+		{
+			System.out.println("Enter the FileName :");
+			String fileName=scan.nextLine();
+			logicObj.readPurchaseDetails(fileName);
+			logicObj.setInvoiceNo();
+		}
+		else
+		{
+			System.out.println("Only Admins Are Allowd to Access it :");
+		}
 	}
 	
 	private void getThresholdStockDetails() throws Exception
 	{
-		System.out.println("Enter the Category Name :");
-		String category=scan.nextLine();
-		
-		List<KartDetails> kartList=logicObj.getKartDetails(category);
-		
-		for(int i=0;i<kartList.size();i++)
+		if(role.equals("admin"))
 		{
-			KartDetails kartObj=kartList.get(i);
-			
-			if(kartObj.getStock()<=10)
+			System.out.println("Enter the Category Name :");
+			String category=scan.nextLine();
+		
+			List<KartDetails> kartList=logicObj.getKartDetails(category);
+		
+			for(int i=0;i<kartList.size();i++)
 			{
-				System.out.println("* Brand : "+kartObj.getBrand());
-				System.out.println("* Model : "+kartObj.getModel());
-				System.out.println();
+				KartDetails kartObj=kartList.get(i);
+			
+				if(kartObj.getStock()<=10)
+				{
+					System.out.println("* Brand : "+kartObj.getBrand());
+					System.out.println("* Model : "+kartObj.getModel());
+					System.out.println();
+				}
 			}
+		}
+		else
+		{
+			System.out.println("Only Admins Are Allowd to Access it :");
 		}
 	}
 	
 	private void updateStockInKart() throws Exception
 	{
-		System.out.println("Enter the Category Name :");
-		String category=scan.nextLine();
-		int stock=0;
-		
-		List<KartDetails> kartList=logicObj.getKartDetails(category);
-		
-		for(int i=0;i<kartList.size();i++)
+		if(role.equals("admin"))
 		{
-			KartDetails kartObj=kartList.get(i);
+			System.out.println("Enter the Category Name :");
+			String category=scan.nextLine();
+			int stock=0;
+		
+			List<KartDetails> kartList=logicObj.getKartDetails(category);
+		
+			for(int i=0;i<kartList.size();i++)
+			{
+				KartDetails kartObj=kartList.get(i);
 			
-			stock=kartObj.getStock()+15;
-			kartObj.setStock(stock);
+				stock=kartObj.getStock()+15;
+				kartObj.setStock(stock);
+			}
+			logicObj.setKartDetails(category, kartList, category);
 		}
-		logicObj.setKartDetails(category, kartList, category);
+		else
+		{
+			System.out.println("Only Admins Are Allowd to Access it :");
+		}
+	}
+	
+	private void logout() throws Exception
+	{
+		flag=false;
+		System.out.println("Logout Done Successfully :");
 	}
 	
 	public static void main(String args[]) throws Exception
@@ -326,7 +369,8 @@ public class ZKart
 			System.out.println("-*-*-* 7 . READ PURCHASE DETAILS -*-*-*-*-*");
 			System.out.println("-*-*-* 8 . THRESHOLD STOCK DETAILS -*-*-*-*");
 			System.out.println("-*-*-* 9 . UPDATE THE STOCK DETAILS *-*-*-*");
-			System.out.println("-*-*-* 10 . EXIT ZKART PORTAL -*-*-*-*-*-*-");
+			System.out.println("-*-*-* 10 . LOGOUT FROM THE KART *-*-*-*-*-");
+			System.out.println("-*-*-* 11 . EXIT ZKART PORTAL -*-*-*-*-*-*-");
 			System.out.println();
 			System.out.println();
 			try
@@ -445,7 +489,19 @@ public class ZKart
 						}
 						break;
 						
-				case 10 :
+				case 10:
+						try
+						{
+							zkartObj.logout();
+						}
+						catch(Exception e)
+						{
+							System.out.println("Exception Occured : "+e.getMessage());
+							e.printStackTrace();
+						}
+						break;
+						
+				case 11 :
 						try
 						{
 							flag=false;
