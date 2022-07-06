@@ -341,6 +341,7 @@ public class ZKart
 	private void logout() throws Exception
 	{
 		flag=false;
+		role="";
 		System.out.println("Logout Done Successfully :");
 	}
 	
