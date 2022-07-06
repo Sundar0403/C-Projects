@@ -80,7 +80,6 @@ public class ZKartLogic
 		{
 			this.invoiceNo=invoiceNo;
 		}
-		System.out.println(invoiceNo);
 	}
 
 	public void generateInvoice(List<PurchaseDetails> purchase, double totalAmount, int creditsUsed,int creditsGained) 

@@ -19,15 +19,12 @@ public class CacheLayer
 	public Map<String, List<KartDetails>> setKartDetails(String category, List<KartDetails> kartList, String fileName) throws Exception
 	{
 		kartMap.put(category, kartList);
-		System.out.println(kartMap);
 		return kartMap;
 	}
 
 	public Map<String, CustomerDetails> setCustomerDetails(String userName, CustomerDetails customerObj, String fileName) throws Exception
 	{
-		System.out.println(customerMap);
 		customerMap.put(userName, customerObj);
-		System.out.println(customerMap);
 		return customerMap;
 	}
 
@@ -46,8 +43,6 @@ public class CacheLayer
 	{
 		purchaseMap.put(invoiceNo, purchase);
 		this.invoiceNo=invoiceNo;
-		System.out.println(this.invoiceNo);
-		System.out.println(purchaseMap);
 		return purchaseMap;
 	}
 	

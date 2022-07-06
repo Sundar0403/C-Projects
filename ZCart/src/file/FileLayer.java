@@ -120,6 +120,8 @@ public class FileLayer {
 
 	public void readPurchaseFromFile(String fileName) throws Exception {
 		String result = readCustomerOrKartDetails(fileName);
+		
+		System.out.println(result);
 
 		String arr[] = result.split("\n");
 		List<PurchaseDetails> purchaseList = new ArrayList<>();
@@ -158,6 +160,8 @@ public class FileLayer {
 
 	public void readKartFromFile(String fileName) throws Exception {
 		String result = readCustomerOrKartDetails(fileName);
+		
+		System.out.println(result);
 
 		String arr[] = result.split("\n");
 		String firstCategory="";

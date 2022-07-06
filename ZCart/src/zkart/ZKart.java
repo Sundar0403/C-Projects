@@ -253,9 +253,7 @@ public class ZKart
 	{
 		if(role.equals("admin"))
 		{
-			System.out.println("Enter the FileName :");
-			String fileName=scan.nextLine();
-			logicObj.readCustomerDetails(fileName);
+			logicObj.readCustomerDetails("Customer.txt");
 		}
 		else
 		{
@@ -267,9 +265,7 @@ public class ZKart
 	{
 		if(role.equals("admin"))
 		{
-			System.out.println("Enter the FileName :");
-			String fileName=scan.nextLine();
-			logicObj.readKartDetails(fileName);
+			logicObj.readKartDetails("Kart.txt");
 		}
 		else
 		{
@@ -281,9 +277,7 @@ public class ZKart
 	{
 		if(role.equals("admin"))
 		{
-			System.out.println("Enter the FileName :");
-			String fileName=scan.nextLine();
-			logicObj.readPurchaseDetails(fileName);
+			logicObj.readPurchaseDetails("Purchase.txt");
 			logicObj.setInvoiceNo();
 		}
 		else
@@ -381,8 +375,9 @@ public class ZKart
 			}
 			catch(Exception e)
 			{
-				System.out.println("Error Occured : "+e.getMessage());
-				e.printStackTrace();
+				System.out.println("Integer Input Only : "+e.getMessage());
+				break;
+				//e.printStackTrace();
 			}
 			
 			switch(choice)
