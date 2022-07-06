@@ -1,0 +1,2 @@
+Customer Id	Customer Name	Location	Mobile Number
+1		Mani Sundar		A		6369299251
