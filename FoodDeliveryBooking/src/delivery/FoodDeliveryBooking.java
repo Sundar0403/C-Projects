@@ -1,5 +1,10 @@
 package delivery;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -11,6 +16,7 @@ public class FoodDeliveryBooking
 {
 	FoodDeliveryLogic logicObj=new FoodDeliveryLogic();
 	Scanner scan=new Scanner(System.in);
+	String pickUpLocation="";
 	
 	private void setCustomerDetails() throws Exception
 	{
@@ -44,19 +50,91 @@ public class FoodDeliveryBooking
 	
 	public void foodOrder() throws Exception
 	{
-		System.out.println("Deliver Executive Status Are Give Below :");
-		
-		String delivery=logicObj.readDetails("delivery.txt");
-		System.out.println(delivery);
-		
 		OrderDetails orderObj=new OrderDetails();
+		
+		System.out.println("Enter the Customer Id :");
+		int custId=scan.nextInt();
+		scan.nextLine();
 		
 		int bookingId=logicObj.getBookingId();
 		orderObj.setOrderId(bookingId);
 		
-		String deliveryExecutive=scan.nextLine();
+		int count=0;
+		int amount=0;
+		
+		
+		boolean flag=true;
+		
+		String delivery=logicObj.readDetails("delivery.txt");
+		System.out.println(delivery);
+		List<OrderDetails> orderList=new ArrayList<>();
+		
+		System.out.println("You are Alloted to Delivery Executive :"+logicObj.allotDelivery());
+		
+		while(flag==true)
+		{
+			orderList=new ArrayList<>();
+			count++;
+			
+			System.out.println("Enter the Restuarant Name :");
+			String restName=scan.nextLine();
+			orderObj.setPickUpLocation(restName);
+			
+			System.out.println("Enter the Destination Point :");
+			String destination=scan.nextLine();
+			orderObj.setDropLocation(destination);
+			
+			System.out.println("Enter the Time :");
+			String time=scan.nextLine();
+			
+			System.out.println("Deliver Executive Status Are Give Below :");
+			
+			String deliveryExecutive=logicObj.allotDelivery();
+			orderObj.setDeliveryExecutive(deliveryExecutive);
+
+			String times[]=time.split(":");
+			System.out.println(Arrays.toString(times));
+			String pickUpTime=logicObj.getPickUpTime(times);
+			orderObj.setPickUpTime(pickUpTime);
+			
+			String deliveryTime=logicObj.getDeliveryTime(times);
+			orderObj.setDeliveryTime(deliveryTime);
+			
+			if(count==1)
+			{
+				amount=amount+50;
+				pickUpLocation=restName;
+			}
+			
+			if(count>1)
+			{
+				if(!restName.equals(pickUpLocation))
+				{
+					amount=amount+50;
+				}
+				else
+				{
+					amount=amount+5;
+				}
+			}
+			orderObj.setOrderAmount(amount);
+			orderList.add(orderObj);
+			
+			System.out.println("Do You Want to Continue Order Food : ");
+			System.out.println("1.YES\n2.NO");
+			String val=scan.nextLine();
+			if(val.equals("YES"))
+			{
+				flag=true;
+			}
+			else
+			{
+				flag=false;
+			}
+		}
+		logicObj.setOrderDetails(bookingId,orderList);
 	}
-	
+
 	private void readCustomerDetails() throws Exception
 	{
 		logicObj.readCustomerDetails("Customer.txt");

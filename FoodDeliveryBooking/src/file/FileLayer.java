@@ -5,8 +5,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.List;
 import java.util.Map;
 
+import booking.OrderDetails;
 import cache.CacheLayer;
 import customer.CustomerDetails;
 
@@ -130,6 +132,28 @@ public class FileLayer
 				for(Map.Entry<String,Integer> delivery : deliveryMap.entrySet())
 				{
 					buffered.write(delivery.getKey()+"\t\t"+delivery.getValue()+"\n");
+				}
+			}
+		}
+	}
+
+	public void setOrderDetails(String fileName, Map<Integer, List<OrderDetails>> orderMap) throws Exception 
+	{
+		File fileObj=createNewFile(fileName);
+		
+		try(FileWriter writer=new FileWriter(fileObj);)
+		{
+			try(BufferedWriter buffered=new BufferedWriter(writer);)
+			{
+				buffered.write("Delivery"+"\t"+"Amount"+"\n");
+				
+				for(List<OrderDetails> delivery : orderMap.values())
+				{
+					for(int i=0;i<delivery.size();i++)
+					{
+						OrderDetails orderObj=delivery.get(i);
+						buffered.write(orderObj.getOrderId()+"\t\t"+orderObj.getDeliveryExecutive()+"\t\t"+orderObj.getPickUpLocation()+"\t\t"+orderObj.getDropLocation()+"\t\t"+orderObj.getPickUpTime()+"\t\t"+orderObj.getDeliveryTime()+"\t\t"+orderObj.getOrderAmount());
+					}
 				}
 			}
 		}

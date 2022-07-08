@@ -1,0 +1,2 @@
+Delivery	Amount
+1001				B		A		10:30		10:60		50

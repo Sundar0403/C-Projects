@@ -2,17 +2,20 @@ package cache;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import booking.OrderDetails;
 import customer.CustomerDetails;
 
 public class CacheLayer {
 	
 	Scanner scan=new Scanner(System.in);
 	private Map<Integer,CustomerDetails> customerMap=new HashMap<>();
-	private static Map<String,Integer> deliveryMap=new HashMap<>();
+	private static Map<String,Integer> deliveryMap=new LinkedHashMap<>();
+	private static Map<Integer,List<OrderDetails>>orderMap=new HashMap<>();
 	private List<String> restaurant=new ArrayList<>();
 	
 	public Map<String,Integer> setDeliveryExecutiveDetails() throws Exception
@@ -28,12 +31,22 @@ public class CacheLayer {
 		return deliveryMap;
 	}
 	
+	public List<OrderDetails> getOrderDetails(int orderId) throws Exception
+	{
+		return orderMap.get(orderId);
+	}
+	
 	public void setDelivery(String deliveryExecutive,int amount) throws Exception
 	{
 		deliveryMap.put(deliveryExecutive,amount);
 	}
 	
-	public void setRestaurant() throws Exception
+	public List<String> getRestaurant() throws Exception
+	{
+		return restaurant;
+	}
+	
+	public CacheLayer()
 	{
 		restaurant.add("A");
 		restaurant.add("B");
@@ -51,6 +64,12 @@ public class CacheLayer {
 	public Map<String, Integer> getDeliveryMap() throws Exception
 	{
 		return deliveryMap;
+	}
+
+	public Map<Integer, List<OrderDetails>> setOrderDetails(int bookingId, List<OrderDetails> orderList) 
+	{
+		orderMap.put(bookingId,orderList);
+		return orderMap;
 	}
 
 }
