@@ -1,0 +1,140 @@
+ COVID MANAGEMENT
+ 
+ User Details : Stores Users Who are Using this 
+ 
+ Username
+ Name
+ Role
+ Password
+ 
+ userMap : to store the User Details
+ 
+ UserName key -> UserDetails pojo Value
+ 
+ Admin Details(Health Ministry) : Stores Admin Details
+ 
+ AdminId
+ Password
+ Role
+ 
+ login() :-> Validating the User is Whether He is Normal User or Admin or Hospital User
+ 
+ if (Role.equals("admin"))
+ {
+ //Accessible to
+ 	patientUpdate
+ 	HospitalUpdate
+ 	UserDetailsUpdation
+ 	stateWiseCountUpdation
+ 	NationWiseUpdation
+ }
+ 
+ else if(role.equals("user"))
+ {
+ //Accessible to
+ 	StateWiseCountCheck
+ 	NationWiseCountCheck	
+ }
+ 
+ 
+ Class Patient : Stores Patient Details in a Pojo 
+ 
+ Patient Name
+ Patient Id
+ patient Status
+ Patient Address
+ 
+ Patient Map : To Store the Patient Details in a Map
+ 
+ Patient Id Key -> Patient object is value
+ 
+ Class Hospital : To Store the Hospital Details in a Pojo
+ 
+ Hospital Id
+ Password
+ Role
+ Hospital Name
+ State
+ No of Persons Affected
+ No of Death
+ No of Persons Recovered
+ No of Persons On Treatment
+ 
+ 
+ Hospital Id Key -> Hospital Pojo is value
+ 
+ 
+ interface StatusOfPatients :
+ 
+ void setNoOfPersonsAffected();
+ void setNoOfDeath();
+ void setNoOfPersonsRecovered();
+ void setNoOfPersonsOnTreatment();
+ 
+ class State implements StatusOfPatients : State Wise Affected Details are Stored Here
+ 
+ StateName
+ noOfPersonsAffected
+ No of Death
+ No of Recovered
+ No of On Treatment
+ 
+setNoOfPersonsAffected()
+{
+	//every Hospital total Count is Added Here
+}
+setNoOfDeath()
+{
+	//every Hospital total Death Count is Added Here
+}
+setNoOfPersonsRecovered()
+{
+	//every Hospital total Recovered Count is Added Here
+}
+setNoOfPersonsOnTreatment()
+{
+	//every Hospital total On going Treatment Count is Added Here
+}
+
+State Map : To Store the State Details
+
+State Name key -> State Pojo Object value
+
+class State implements StatusOfPatients : State Wise Affected Details are Stored Here
+ 
+ NationName
+ noOfPersonsAffected
+ No of Death
+ No of Recovered
+ No of On Treatment
+ 
+setNoOfPersonsAffected()
+{
+	//every Hospital total Count is Added Here
+}
+setNoOfDeath()
+{
+	//every Hospital total Death Count is Added Here
+}
+setNoOfPersonsRecovered()
+{
+	//every Hospital total Recovered Count is Added Here
+}
+setNoOfPersonsOnTreatment()
+{
+	//every Hospital total On going Treatment Count is Added Here
+}
+
+Nation Pojo Gets the Total Details of the Country
+
+class LogicLayer : getting Details from Runner and Save it in File and Cache Layer
+
+class cacheLayer : Save the Details of the Objects in a Map based on Pojo
+
+class FileLayer : Write and read theDetails of the Pojo Objects Map in File
+
+class Runner : Handles all the Function Call in Main Getting Inputs from User and Admin
+
+ 
+
+ 
