@@ -1,32 +1,56 @@
- COVID MANAGEMENT
+COVID MANAGEMENT
  
- User Details : Stores Users Who are Using this 
+1. User Details : Stores Users Who are Using this 
+
+class UserDetails
  
- Username
- Name
- Role
- Password
+Username
+Name
+Role
+Password
+Mobile No
+Address
+
+//User HashMap for Saving UserDetails and Will be easy for get User Details
  
- userMap : to store the User Details
+HashMap -> UserMap : to store the User Details
  
- UserName key -> UserDetails pojo Value
+ Key : UserName -> Values : UserDetails pojo
  
- Admin Details(Health Ministry) : Stores Admin Details
+2. Admin Details(Health Ministry & Hosiptal) : Stores Admin Details
+
+class AdminDetails extends UserDetails
  
- AdminId
- Password
- Role
+ Set the UserName(Admin)
+ Set the Name
+ Set the Password
+ Set the Mobile No
+ Set the Role
+Set the Address
+
+//There are two Roles for an Admin
+//1.Hospital -> Only Allowed to Access a Particular Hospital Updation & Retrieval
+//2.Health Ministry -> All Access Available For Health Ministry Can View Any Hosiptal Details Patient Details 
+		Update & Retrieve State Wise count & Nation Count 
  
  login() :-> Validating the User is Whether He is Normal User or Admin or Hospital User
- 
- if (Role.equals("admin"))
- {
- //Accessible to
+
+if(Role.equals("Health Ministry"))
+{
+//Accessible to
  	patientUpdate
  	HospitalUpdate
  	UserDetailsUpdation
  	stateWiseCountUpdation
- 	NationWiseUpdation
+ 	NationWiseUpdation	
+} 
+ 
+else if (Role.equals("Hosiptal"))
+ {
+ //Accessible to
+ 	patientUpdate
+ 	HospitalUpdate
+ 	PatientDetailsUpdation
  }
  
  else if(role.equals("user"))
@@ -36,40 +60,46 @@
  	NationWiseCountCheck	
  }
  
+ 3. Patient Details : Stores Patient Details
  
- Class Patient : Stores Patient Details in a Pojo 
+class PatientDetails extends UserDetails
+
+UserId Get the UserDetails -> Update it in Patient Pojo
  
- Patient Name
+ Set the Patient Name
  Patient Id
  patient Status
- Patient Address
+Set the Patient Address
  
  Patient Map : To Store the Patient Details in a Map
  
- Patient Id Key -> Patient object is value
- 
- Class Hospital : To Store the Hospital Details in a Pojo
- 
- Hospital Id
- Password
- Role
- Hospital Name
- State
- No of Persons Affected
- No of Death
- No of Persons Recovered
- No of Persons On Treatment
- 
- 
- Hospital Id Key -> Hospital Pojo is value
+ Key : Patient Id -> Value : PatientDetails
  
  
  interface StatusOfPatients :
  
- void setNoOfPersonsAffected();
- void setNoOfDeath();
- void setNoOfPersonsRecovered();
- void setNoOfPersonsOnTreatment();
+ void setNoOfPersonsAffected(int affected);
+ void setNoOfDeath(int death);
+ void setNoOfPersonsRecovered(int recovered);
+ void setNoOfPersonsOnTreatment(int treatment);
+
+4. Hospital : To Store the Hospital Details in a Pojo
+
+class Hosiptal extends UserDetails implements StatusOfPatients
+ 
+Set the Hospital Id(Username)
+ Set the Password
+ Set the Role
+ Set the Hospital Name
+ Set the StateName
+ Set the No of Persons Affected
+ Set the No of Death
+ Set the No of Persons Recovered
+ Set the No of Persons On Treatment
+ 
+HashMap : Hospital Map -> To Store the Hospital Details  
+
+ Key : Hosiptal UserName -> Value : Hospital Pojo
  
  class State implements StatusOfPatients : State Wise Affected Details are Stored Here
  
@@ -79,19 +109,19 @@
  No of Recovered
  No of On Treatment
  
-setNoOfPersonsAffected()
+setNoOfPersonsAffected(int Affcected)
 {
 	//every Hospital total Count is Added Here
 }
-setNoOfDeath()
+setNoOfDeath(int death)
 {
 	//every Hospital total Death Count is Added Here
 }
-setNoOfPersonsRecovered()
+setNoOfPersonsRecovered(int recovered)
 {
 	//every Hospital total Recovered Count is Added Here
 }
-setNoOfPersonsOnTreatment()
+setNoOfPersonsOnTreatment(int treatment)
 {
 	//every Hospital total On going Treatment Count is Added Here
 }
@@ -100,7 +130,7 @@ State Map : To Store the State Details
 
 State Name key -> State Pojo Object value
 
-class State implements StatusOfPatients : State Wise Affected Details are Stored Here
+class Nation implements StatusOfPatients : Nation Wise Affected Details are Stored Here
  
  NationName
  noOfPersonsAffected
@@ -127,14 +157,31 @@ setNoOfPersonsOnTreatment()
 
 Nation Pojo Gets the Total Details of the Country
 
-class LogicLayer : getting Details from Runner and Save it in File and Cache Layer
+class LogicLayer : 
+	1.getting Details from Runner
+	2.Passing it to CacheLayer 
+	3.Passing it to FileLayer
+	4.Getting the Readed Values from file and Passing it to Cache Layer to Load it in HashMap
+	5.Getting the Hospital Details to get Hosiptal Wise Details of Death Active Patient Discharged Etc. and return it to Runner Class. 
+	6.Getting StateWise details and return it to Runner Class. 
+	7.Getting Nationwise details and return it to Runner Class. 
 
-class cacheLayer : Save the Details of the Objects in a Map based on Pojo
+class cacheLayer : 
+	//With the Parameters Received from Logic Layer
+	1.Saving UserDetails
+	2.Saving PatientDetails
+	3.Saving HospitalDetails
 
-class FileLayer : Write and read theDetails of the Pojo Objects Map in File
+class FileLayer : 
+	//With the Parameters Received from Logic Layer
+	1.Creating the New File / Update the Details in Exisiting File
+	2.Using FileWriter & BufferedWriter Writing the Details in File
+	3.Using FileReader & BufferedReader Read the Contents from File
+	4.Return the Readed Content from File to Logic Layer to Load the Details to the HashMap.
 
-class Runner : Handles all the Function Call in Main Getting Inputs from User and Admin
-
- 
-
- 
+class Runner : 
+	1.Switch case to Handle all the Operations(Like ValidatingUser,UserCreation,Getting stateWiseCount,Hospital Updation)
+	2.UserName if Doesnt exist create UserDetails
+	3.Setting Input and Passing it to Logic Layer for All Operations.
+	4.Getting Result from the Logic Layer.
+	
